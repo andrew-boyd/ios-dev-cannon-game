@@ -17,16 +17,19 @@ class GameScene: SKScene {
 		// Add background
 		let background = SKSpriteNode(imageNamed: "Starfield")
 		background.position = CGPointMake(0, 0)
+		background.size = self.size
 		background.anchorPoint = CGPointMake(0, 0)
 		background.blendMode = SKBlendMode.Replace
 		_mainLayer.addChild(background)
 		
 		// Add main layer
-		_mainLayer.position = CGPointMake(0, 100)
+		_mainLayer.position = CGPointMake(0, 0)
 		self.addChild(_mainLayer)
 		
 		// Add cannon layer
 		_cannon.position = CGPointMake(self.size.width/2, 0)
+		_cannon.size.width = self.size.width/2.5
+		_cannon.size.height = self.size.width/2.5
 		_mainLayer.addChild(_cannon)
 		
 		// create cannon rotation actions

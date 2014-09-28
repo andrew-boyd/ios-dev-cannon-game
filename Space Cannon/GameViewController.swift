@@ -35,12 +35,13 @@ class GameViewController: UIViewController {
             let skView = self.view as SKView
 //            skView.showsFPS = true
 //            skView.showsNodeCount = true
+			scene.size = self.view.bounds.size
 			
             /* Sprite Kit applies additional optimizations to improve rendering performance */
             skView.ignoresSiblingOrder = true
             
             /* Set the scale mode to scale to fit the window */
-            scene.scaleMode = .AspectFill
+            scene.scaleMode = .AspectFit
             
             skView.presentScene(scene)
         }
