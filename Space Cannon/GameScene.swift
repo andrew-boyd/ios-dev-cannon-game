@@ -10,8 +10,8 @@ import SpriteKit
 
 let _mainLayer = SKNode()
 let _cannon = SKSpriteNode(imageNamed: "Cannon")
-
-let SHOOT_SPEED = 400.0
+let SHOOT_SPEED = 1000.0
+var _didShoot = false
 
 func radiansToVector(radians:CGFloat) -> CGVector {
 	var vector = CGVector(CGFloat(cosf(Float(radians))), CGFloat(sinf(Float(radians))))
@@ -31,6 +31,17 @@ class GameScene: SKScene {
 		background.anchorPoint = CGPointMake(0, 0)
 		background.blendMode = SKBlendMode.Replace
 		_mainLayer.addChild(background)
+		
+		// Add Edges
+		let leftEdge = SKNode()
+		let rightEdge = SKNode()
+		leftEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height))
+		rightEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height))
+		leftEdge.position = CGPointZero
+		rightEdge.position = CGPointMake(self.size.width, 0.0)
+		
+		self.addChild(leftEdge)
+		self.addChild(rightEdge)
 		
 		// Add main layer
 		_mainLayer.position = CGPointMake(0, 0)
@@ -62,8 +73,10 @@ class GameScene: SKScene {
 		
 		let x_speed = CGFloat(Double(rotationVector.dx) * SHOOT_SPEED)
 		let y_speed = CGFloat(Double(rotationVector.dy) * SHOOT_SPEED)
-		
 		ball.physicsBody?.velocity = CGVectorMake(x_speed, y_speed)
+		ball.physicsBody?.restitution = 1.0
+		ball.physicsBody?.linearDamping = 0.0
+		ball.physicsBody?.friction = 0.0
 		
 		_mainLayer.addChild(ball)
 	}
@@ -72,13 +85,17 @@ class GameScene: SKScene {
         /* Called when a touch begins */
         
         for touch: AnyObject in touches {
-			
-			shoot()
-			
+			_didShoot = true
 		}
     }
 	
 	override func didSimulatePhysics() {
+		
+		if (_didShoot) {
+			shoot()
+			_didShoot = false
+		}
+		
 		_mainLayer.enumerateChildNodesWithName("ball") {
 			node, stop in
 			if ( !CGRectContainsPoint(self.frame, node.position) ) {
