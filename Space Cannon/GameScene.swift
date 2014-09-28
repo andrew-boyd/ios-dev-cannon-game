@@ -8,17 +8,43 @@
 
 import SpriteKit
 
-let _mainLayer = SKNode()
-let _cannon = SKSpriteNode(imageNamed: "Cannon")
-let SHOOT_SPEED = 1000.0
-var _didShoot = false
-
-func radiansToVector(radians:CGFloat) -> CGVector {
-	var vector = CGVector(CGFloat(cosf(Float(radians))), CGFloat(sinf(Float(radians))))
-	return vector
-}
-
 class GameScene: SKScene {
+	
+	let _mainLayer = SKNode()
+	let _cannon = SKSpriteNode(imageNamed: "Cannon")
+	let SHOOT_SPEED = 1000.0
+	let HaloLowAngle = CGFloat(200 * M_PI / 180.0)
+	let HaloMaxAngle = CGFloat(340 * M_PI / 180.0)
+	let HaloSpeed:CGFloat = 100.0
+	var _didShoot = false
+	
+	func radiansToVector(radians:CGFloat) -> CGVector {
+		var vector = CGVector(CGFloat(cosf(Float(radians))), CGFloat(sinf(Float(radians))))
+		return vector
+	}
+	
+	func randomInRange(low:CGFloat, high:CGFloat) -> CGFloat {
+		var randomAssNumber = low + CGFloat(arc4random()) % (high - low);
+		return CGFloat(randomAssNumber)
+	}
+	
+	func spawnHalo() {
+		let halo = SKSpriteNode(imageNamed: "Halo")
+		halo.position = CGPointMake(
+			randomInRange(halo.size.width/2, high: self.size.width - (halo.size.width/2)),
+			self.size.height + (halo.size.width/2)
+		)
+		
+		halo.physicsBody = SKPhysicsBody(circleOfRadius: 16)
+		var direction = radiansToVector(randomInRange(HaloLowAngle, high: HaloMaxAngle))
+		halo.physicsBody?.velocity = CGVectorMake(direction.dx * HaloSpeed, direction.dy * HaloSpeed)
+		halo.physicsBody?.restitution = 1.0
+		halo.physicsBody?.linearDamping = 0.0
+		halo.physicsBody?.friction = 0.0
+		
+		self.addChild(halo)
+	}
+	
     override func didMoveToView(view: SKView) {
 		
 		// Disable gravity
@@ -35,8 +61,8 @@ class GameScene: SKScene {
 		// Add Edges
 		let leftEdge = SKNode()
 		let rightEdge = SKNode()
-		leftEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height))
-		rightEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height))
+		leftEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height * 2))
+		rightEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height * 2))
 		leftEdge.position = CGPointZero
 		rightEdge.position = CGPointMake(self.size.width, 0.0)
 		
@@ -60,7 +86,15 @@ class GameScene: SKScene {
 			])
 		
 		_cannon.runAction(SKAction.repeatActionForever(rotateCannon))
-    }
+		
+		// create spawn halo actions
+		let spawnHaloAction = SKAction.sequence([
+				SKAction.waitForDuration(2.0),
+				SKAction.runBlock(spawnHalo)
+			])
+		
+		self.runAction(SKAction.repeatActionForever(spawnHaloAction))
+	}
 	
 	func shoot() {
 		let ball = SKSpriteNode(imageNamed: "Ball")
@@ -87,6 +121,8 @@ class GameScene: SKScene {
         for touch: AnyObject in touches {
 			_didShoot = true
 		}
+		
+		spawnHalo()
     }
 	
 	override func didSimulatePhysics() {
