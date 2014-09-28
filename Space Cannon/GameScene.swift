@@ -29,6 +29,13 @@ class GameScene: SKScene {
 		_cannon.position = CGPointMake(self.size.width/2, 0)
 		_mainLayer.addChild(_cannon)
 		
+		// create cannon rotation actions
+		var rotateCannon = SKAction.sequence([
+				SKAction.rotateByAngle(CGFloat(M_PI), duration: 2),
+				SKAction.rotateByAngle(CGFloat(-M_PI), duration: 2)
+			])
+		
+		_cannon.runAction(SKAction.repeatActionForever(rotateCannon))
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
