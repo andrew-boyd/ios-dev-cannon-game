@@ -131,6 +131,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		halo.physicsBody?.contactTestBitMask = BallCategory
 		_mainLayer.addChild(halo)
 	}
+	
+	func didBeginContact(contact: SKPhysicsContact) {
+		var firstBody:SKPhysicsBody
+		var secondBody:SKPhysicsBody
+		
+		if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+			firstBody = contact.bodyA
+			secondBody = contact.bodyB
+		} else {
+			firstBody = contact.bodyB
+			secondBody = contact.bodyA
+		}
+		
+		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == BallCategory {
+			// collision between halo and ball
+			firstBody.node?.removeFromParent()
+			secondBody.node?.removeFromParent()
+		}
+	}
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         /* Called when a touch begins */
