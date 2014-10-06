@@ -27,6 +27,7 @@
 		011D94B619D83D2E00E14A3F /* Cannon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011D94AA19D83D2E00E14A3F /* Cannon@2x.png */; };
 		011D94B719D83D2E00E14A3F /* Halo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011D94AB19D83D2E00E14A3F /* Halo@2x.png */; };
 		011D94B819D83D2E00E14A3F /* Starfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011D94AC19D83D2E00E14A3F /* Starfield@2x.png */; };
+		013A378219E2D5F800EC1CD4 /* HaloExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 013A378019E2D5F800EC1CD4 /* HaloExplosion.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		011D94AA19D83D2E00E14A3F /* Cannon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Cannon@2x.png"; sourceTree = "<group>"; };
 		011D94AB19D83D2E00E14A3F /* Halo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Halo@2x.png"; sourceTree = "<group>"; };
 		011D94AC19D83D2E00E14A3F /* Starfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Starfield@2x.png"; sourceTree = "<group>"; };
+		013A378019E2D5F800EC1CD4 /* HaloExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = HaloExplosion.sks; path = ../HaloExplosion.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 		011D947919D83B3900E14A3F /* Space Cannon */ = {
 			isa = PBXGroup;
 			children = (
+				013A378019E2D5F800EC1CD4 /* HaloExplosion.sks */,
 				011D947C19D83B3900E14A3F /* AppDelegate.swift */,
 				011D947E19D83B3900E14A3F /* GameScene.sks */,
 				011D948019D83B3900E14A3F /* GameScene.swift */,
@@ -253,6 +256,7 @@
 				011D94AE19D83D2E00E14A3F /* Ammo1@2x.png in Resources */,
 				011D948819D83B3900E14A3F /* Images.xcassets in Resources */,
 				011D947F19D83B3900E14A3F /* GameScene.sks in Resources */,
+				013A378219E2D5F800EC1CD4 /* HaloExplosion.sks in Resources */,
 				011D948619D83B3900E14A3F /* Main.storyboard in Resources */,
 				011D94B819D83D2E00E14A3F /* Starfield@2x.png in Resources */,
 				011D94B019D83D2E00E14A3F /* Ammo3@2x.png in Resources */,

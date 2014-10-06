@@ -12,6 +12,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	
 	let _mainLayer = SKNode()
 	let _cannon = SKSpriteNode(imageNamed: "Cannon")
+	var _ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
+	var ammo = 5
 	let SHOOT_SPEED = 1000.0
 	let HaloLowAngle = CGFloat(200 * M_PI / 180.0)
 	let HaloMaxAngle = CGFloat(340 * M_PI / 180.0)
@@ -24,7 +26,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	var _didShoot = false
 	
 	func radiansToVector(radians:CGFloat) -> CGVector {
-		var vector = CGVector(CGFloat(cosf(Float(radians))), CGFloat(sinf(Float(radians))))
+		var vector = CGVector(dx: CGFloat(cosf(Float(radians))), dy: CGFloat(sinf(Float(radians))))
 		return vector
 	}
 	
@@ -71,6 +73,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_cannon.size.height = self.size.width/2.5
 		_mainLayer.addChild(_cannon)
 		
+		// add ammo display
+		_ammoDisplay.anchorPoint = CGPointMake(0.5, 0.0)
+		_ammoDisplay.position = _cannon.position
+		_mainLayer.addChild(_ammoDisplay)
+		
 		// create cannon rotation actions
 		var rotateCannon = SKAction.sequence([
 				SKAction.rotateByAngle(CGFloat(M_PI), duration: 2),
@@ -86,29 +93,53 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			])
 		
 		self.runAction(SKAction.repeatActionForever(spawnHaloAction))
+		
+		// refill Ammo
+		let incrementAmmo = SKAction.sequence([
+				SKAction.waitForDuration(1),
+				SKAction.runBlock({ () -> Void in
+					if self.ammo < 5 {
+						self.ammo++
+						self.updateAmmo()
+					}
+				}),
+			])
+		self.runAction(SKAction.repeatActionForever(incrementAmmo))
 	}
 	
 	func shoot() {
-		let ball = SKSpriteNode(imageNamed: "Ball")
-		ball.name = "ball"
-		let rotationVector = radiansToVector(_cannon.zRotation)
-		
-		ball.position = CGPointMake(_cannon.position.x + (_cannon.size.width/2.5 * rotationVector.dx),
-									_cannon.position.y + (_cannon.size.width/2.5 * rotationVector.dy))
-		ball.physicsBody = SKPhysicsBody(circleOfRadius: 6.0)
-		
-		let x_speed = CGFloat(Double(rotationVector.dx) * SHOOT_SPEED)
-		let y_speed = CGFloat(Double(rotationVector.dy) * SHOOT_SPEED)
-		ball.physicsBody?.velocity = CGVectorMake(x_speed, y_speed)
-		ball.size.width = self.size.width/12
-		ball.size.height = self.size.width/12
-		ball.physicsBody?.restitution = 1.0
-		ball.physicsBody?.linearDamping = 0.0
-		ball.physicsBody?.friction = 0.0
-		ball.physicsBody?.categoryBitMask = BallCategory
-		ball.physicsBody?.collisionBitMask = EdgeCategory
-		
-		_mainLayer.addChild(ball)
+		if self.ammo > 0 {
+			self.ammo -= 1
+			updateAmmo()
+			
+			let ball = SKSpriteNode(imageNamed: "Ball")
+			ball.name = "ball"
+			let rotationVector = radiansToVector(_cannon.zRotation)
+			
+			ball.position = CGPointMake(_cannon.position.x + (_cannon.size.width/2.5 * rotationVector.dx),
+										_cannon.position.y + (_cannon.size.width/2.5 * rotationVector.dy))
+			ball.physicsBody = SKPhysicsBody(circleOfRadius: 6.0)
+			
+			let x_speed = CGFloat(Double(rotationVector.dx) * SHOOT_SPEED)
+			let y_speed = CGFloat(Double(rotationVector.dy) * SHOOT_SPEED)
+			ball.physicsBody?.velocity = CGVectorMake(x_speed, y_speed)
+			ball.size.width = self.size.width/12
+			ball.size.height = self.size.width/12
+			ball.physicsBody?.restitution = 1.0
+			ball.physicsBody?.linearDamping = 0.0
+			ball.physicsBody?.friction = 0.0
+			ball.physicsBody?.categoryBitMask = BallCategory
+			ball.physicsBody?.collisionBitMask = EdgeCategory
+			
+			_mainLayer.addChild(ball)
+		}
+	}
+	
+	func updateAmmo() {
+		if self.ammo >= 0 && self.ammo <= 5 {
+			let ammoTextureName = "Ammo" + String(self.ammo)
+			_ammoDisplay.texture = SKTexture(imageNamed: ammoTextureName)
+		}
 	}
 	
 	func spawnHalo() {
@@ -146,9 +177,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == BallCategory {
 			// collision between halo and ball
+			self.addExplosion(firstBody.node!.position)
 			firstBody.node?.removeFromParent()
 			secondBody.node?.removeFromParent()
 		}
+	}
+	
+	func addExplosion(position:CGPoint) {
+		let explosionPath:String = NSBundle.mainBundle().pathForResource("HaloExplosion", ofType: "sks")!
+		let explosion = NSKeyedUnarchiver.unarchiveObjectWithFile(explosionPath) as SKEmitterNode
+		explosion.position = position;
+		_mainLayer.addChild(explosion)
+		
+		let removeExplosion = SKAction.sequence([
+				SKAction.waitForDuration(1.5),
+				SKAction.removeFromParent()
+			])
+		explosion.runAction(removeExplosion)
 	}
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -168,7 +213,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		_mainLayer.enumerateChildNodesWithName("ball") {
 			node, stop in
-			if ( !CGRectContainsPoint(self.frame, node.position) ) {
+			if !CGRectContainsPoint(self.frame, node.position) {
 				node.removeFromParent()
 			}
 		}
