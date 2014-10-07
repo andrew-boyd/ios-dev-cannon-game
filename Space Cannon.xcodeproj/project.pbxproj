@@ -28,6 +28,18 @@
 		011D94B719D83D2E00E14A3F /* Halo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011D94AB19D83D2E00E14A3F /* Halo@2x.png */; };
 		011D94B819D83D2E00E14A3F /* Starfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011D94AC19D83D2E00E14A3F /* Starfield@2x.png */; };
 		013A378219E2D5F800EC1CD4 /* HaloExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 013A378019E2D5F800EC1CD4 /* HaloExplosion.sks */; };
+		01B9CEE119E30A82003673F6 /* LifeBarExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */; };
+		01B9CEE219E30A82003673F6 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE019E30A82003673F6 /* spark.png */; };
+		01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE319E30E69003673F6 /* EdgeHit.sks */; };
+		01EC34D519E44A1F0049E6D0 /* Bounce.caf in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34D019E44A1F0049E6D0 /* Bounce.caf */; };
+		01EC34D619E44A1F0049E6D0 /* DeepExplosion.caf in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34D119E44A1F0049E6D0 /* DeepExplosion.caf */; };
+		01EC34D719E44A1F0049E6D0 /* Explosion.caf in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34D219E44A1F0049E6D0 /* Explosion.caf */; };
+		01EC34D819E44A1F0049E6D0 /* Laser.caf in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34D319E44A1F0049E6D0 /* Laser.caf */; };
+		01EC34D919E44A1F0049E6D0 /* Zap.caf in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34D419E44A1F0049E6D0 /* Zap.caf */; };
+		01EC34DD19E44D450049E6D0 /* PlayButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34DA19E44D450049E6D0 /* PlayButton@2x.png */; };
+		01EC34DE19E44D450049E6D0 /* ScoreBoard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34DB19E44D450049E6D0 /* ScoreBoard@2x.png */; };
+		01EC34DF19E44D450049E6D0 /* Title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34DC19E44D450049E6D0 /* Title@2x.png */; };
+		01EC34E119E44DEC0049E6D0 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01EC34E019E44DEC0049E6D0 /* Menu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +78,18 @@
 		011D94AB19D83D2E00E14A3F /* Halo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Halo@2x.png"; sourceTree = "<group>"; };
 		011D94AC19D83D2E00E14A3F /* Starfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Starfield@2x.png"; sourceTree = "<group>"; };
 		013A378019E2D5F800EC1CD4 /* HaloExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = HaloExplosion.sks; path = ../HaloExplosion.sks; sourceTree = "<group>"; };
+		01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LifeBarExplosion.sks; sourceTree = "<group>"; };
+		01B9CEE019E30A82003673F6 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		01B9CEE319E30E69003673F6 /* EdgeHit.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EdgeHit.sks; sourceTree = "<group>"; };
+		01EC34D019E44A1F0049E6D0 /* Bounce.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Bounce.caf; sourceTree = "<group>"; };
+		01EC34D119E44A1F0049E6D0 /* DeepExplosion.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DeepExplosion.caf; sourceTree = "<group>"; };
+		01EC34D219E44A1F0049E6D0 /* Explosion.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Explosion.caf; sourceTree = "<group>"; };
+		01EC34D319E44A1F0049E6D0 /* Laser.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Laser.caf; sourceTree = "<group>"; };
+		01EC34D419E44A1F0049E6D0 /* Zap.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zap.caf; sourceTree = "<group>"; };
+		01EC34DA19E44D450049E6D0 /* PlayButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PlayButton@2x.png"; sourceTree = "<group>"; };
+		01EC34DB19E44D450049E6D0 /* ScoreBoard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ScoreBoard@2x.png"; sourceTree = "<group>"; };
+		01EC34DC19E44D450049E6D0 /* Title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Title@2x.png"; sourceTree = "<group>"; };
+		01EC34E019E44DEC0049E6D0 /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Menu.swift; path = Classes/Menu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,11 +135,16 @@
 				011D947C19D83B3900E14A3F /* AppDelegate.swift */,
 				011D947E19D83B3900E14A3F /* GameScene.sks */,
 				011D948019D83B3900E14A3F /* GameScene.swift */,
+				01B9CEE319E30E69003673F6 /* EdgeHit.sks */,
+				01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */,
+				01B9CEE019E30A82003673F6 /* spark.png */,
 				011D948219D83B3900E14A3F /* GameViewController.swift */,
 				011D948419D83B3900E14A3F /* Main.storyboard */,
 				011D948719D83B3900E14A3F /* Images.xcassets */,
 				011D948919D83B3900E14A3F /* LaunchScreen.xib */,
+				01EC34E219E44E490049E6D0 /* Classes */,
 				011D94A019D83D2E00E14A3F /* images */,
+				01EC34CF19E44A1F0049E6D0 /* sounds */,
 				011D947A19D83B3900E14A3F /* Supporting Files */,
 			);
 			path = "Space Cannon";
@@ -149,6 +178,9 @@
 		011D94A019D83D2E00E14A3F /* images */ = {
 			isa = PBXGroup;
 			children = (
+				01EC34DA19E44D450049E6D0 /* PlayButton@2x.png */,
+				01EC34DB19E44D450049E6D0 /* ScoreBoard@2x.png */,
+				01EC34DC19E44D450049E6D0 /* Title@2x.png */,
 				011D94A119D83D2E00E14A3F /* Ammo0@2x.png */,
 				011D94A219D83D2E00E14A3F /* Ammo1@2x.png */,
 				011D94A319D83D2E00E14A3F /* Ammo2@2x.png */,
@@ -163,6 +195,27 @@
 				011D94AC19D83D2E00E14A3F /* Starfield@2x.png */,
 			);
 			path = images;
+			sourceTree = "<group>";
+		};
+		01EC34CF19E44A1F0049E6D0 /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				01EC34D019E44A1F0049E6D0 /* Bounce.caf */,
+				01EC34D119E44A1F0049E6D0 /* DeepExplosion.caf */,
+				01EC34D219E44A1F0049E6D0 /* Explosion.caf */,
+				01EC34D319E44A1F0049E6D0 /* Laser.caf */,
+				01EC34D419E44A1F0049E6D0 /* Zap.caf */,
+			);
+			name = sounds;
+			path = Sounds;
+			sourceTree = "<group>";
+		};
+		01EC34E219E44E490049E6D0 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				01EC34E019E44DEC0049E6D0 /* Menu.swift */,
+			);
+			name = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -246,23 +299,34 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01EC34D819E44A1F0049E6D0 /* Laser.caf in Resources */,
 				011D94B219D83D2E00E14A3F /* Ammo5@2x.png in Resources */,
+				01B9CEE119E30A82003673F6 /* LifeBarExplosion.sks in Resources */,
 				011D94B319D83D2E00E14A3F /* Ball@2x.png in Resources */,
+				01EC34DD19E44D450049E6D0 /* PlayButton@2x.png in Resources */,
 				011D948B19D83B3900E14A3F /* LaunchScreen.xib in Resources */,
 				011D94B519D83D2E00E14A3F /* BlueBar@2x.png in Resources */,
 				011D94B119D83D2E00E14A3F /* Ammo4@2x.png in Resources */,
+				01EC34DE19E44D450049E6D0 /* ScoreBoard@2x.png in Resources */,
+				01B9CEE219E30A82003673F6 /* spark.png in Resources */,
 				011D94B419D83D2E00E14A3F /* Block@2x.png in Resources */,
 				011D94AD19D83D2E00E14A3F /* Ammo0@2x.png in Resources */,
 				011D94AE19D83D2E00E14A3F /* Ammo1@2x.png in Resources */,
+				01EC34D619E44A1F0049E6D0 /* DeepExplosion.caf in Resources */,
 				011D948819D83B3900E14A3F /* Images.xcassets in Resources */,
+				01EC34D519E44A1F0049E6D0 /* Bounce.caf in Resources */,
+				01EC34D919E44A1F0049E6D0 /* Zap.caf in Resources */,
 				011D947F19D83B3900E14A3F /* GameScene.sks in Resources */,
 				013A378219E2D5F800EC1CD4 /* HaloExplosion.sks in Resources */,
+				01EC34DF19E44D450049E6D0 /* Title@2x.png in Resources */,
 				011D948619D83B3900E14A3F /* Main.storyboard in Resources */,
 				011D94B819D83D2E00E14A3F /* Starfield@2x.png in Resources */,
 				011D94B019D83D2E00E14A3F /* Ammo3@2x.png in Resources */,
 				011D94B719D83D2E00E14A3F /* Halo@2x.png in Resources */,
 				011D94AF19D83D2E00E14A3F /* Ammo2@2x.png in Resources */,
 				011D94B619D83D2E00E14A3F /* Cannon@2x.png in Resources */,
+				01EC34D719E44A1F0049E6D0 /* Explosion.caf in Resources */,
+				01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +346,7 @@
 			files = (
 				011D948119D83B3900E14A3F /* GameScene.swift in Sources */,
 				011D948319D83B3900E14A3F /* GameViewController.swift in Sources */,
+				01EC34E119E44DEC0049E6D0 /* Menu.swift in Sources */,
 				011D947D19D83B3900E14A3F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
