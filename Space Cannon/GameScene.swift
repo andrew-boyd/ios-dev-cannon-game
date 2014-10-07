@@ -207,11 +207,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	
 	func spawnHalo() {
 		let halo = SKSpriteNode(imageNamed: "Halo")
+		halo.name = "halo"
 		halo.position = CGPointMake(
 			randomInRange(halo.size.width/2, self.size.width - (halo.size.width/2)),
 			self.size.height + (halo.size.width/2)
 		)
-		
 		halo.physicsBody = SKPhysicsBody(circleOfRadius: 16)
 		var direction = radiansToVector(randomInRange(HaloLowAngle, HaloMaxAngle))
 		halo.size.width = self.size.width/8
@@ -222,7 +222,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		halo.physicsBody?.friction = 0.0
 		halo.physicsBody?.categoryBitMask = HaloCategory
 		halo.physicsBody?.collisionBitMask = EdgeCategory
-		halo.physicsBody?.contactTestBitMask = BallCategory
+		halo.physicsBody?.contactTestBitMask = BallCategory | EdgeCategory | ShieldCategory | LifeBarCategory
 		_mainLayer.addChild(halo)
 	}
 	
