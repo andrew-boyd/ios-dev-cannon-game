@@ -130,11 +130,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_menu.position = CGPointMake(self.size.width/2, self.size.height - 220)
 		_menu.zPosition = 10
 		self.addChild(_menu)
+		
+		// set initial values
+		var ammo = 5
+		updateAmmo()
+		setScore(0)
+		_menu.setScore(0)
+		_menu.setTopScore(_menu.topScore)
+		_scoreLabel.hidden = true
 	}
 	
 	func newGame() {
 		_gameOver = false
 		_menu.hidden = true
+		_scoreLabel.hidden = false
 		var ammo = 5
 		updateAmmo()
 		setScore(0)
@@ -299,7 +308,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		}
 		
 		_menu.hidden = false
+		_scoreLabel.hidden = true
 		_gameOver = true
+		_menu.setScore(_score)
+		
+		if _score > _menu.topScore {
+			_menu.setTopScore(_score)
+		}
 	}
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
