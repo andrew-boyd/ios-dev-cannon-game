@@ -236,7 +236,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			spawnHaloAction?.speed += 0.01
 		}
 		
-		let halo = SKSpriteNode(imageNamed: "Halo")
+		let halo = Halo(imageNamed: "Halo")
 		halo.name = "halo"
 		halo.position = CGPointMake(
 			randomInRange(halo.size.width/2, self.size.width - (halo.size.width/2)),
@@ -247,6 +247,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		halo.size.width = self.size.width/8
 		halo.size.height = self.size.width/8
 		halo.physicsBody?.velocity = CGVectorMake(direction.dx * HaloSpeed, direction.dy * HaloSpeed)
+		halo.updateStoredVelocity()
 		halo.physicsBody?.restitution = 1.0
 		halo.physicsBody?.linearDamping = 0.0
 		halo.physicsBody?.friction = 0.0
@@ -282,8 +283,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		}
 		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == EdgeCategory {
 			// collision between halo and wall
-			self.runAction(zapSound)
+			let haloNode = firstBody.node as Halo
+			haloNode.forceBounce()
 			
+			self.runAction(zapSound)
 		}
 		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == BallCategory {
 			// collision between halo and ball

@@ -29,6 +29,8 @@
 		011D94B819D83D2E00E14A3F /* Starfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 011D94AC19D83D2E00E14A3F /* Starfield@2x.png */; };
 		013A378219E2D5F800EC1CD4 /* HaloExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 013A378019E2D5F800EC1CD4 /* HaloExplosion.sks */; };
 		0179A40A19E6DD1F00DC11B2 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0179A40919E6DD1F00DC11B2 /* Ball.swift */; };
+		0179A40C19E6ED2200DC11B2 /* Halo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0179A40B19E6ED2200DC11B2 /* Halo.swift */; };
+		0179A40E19E7018D00DC11B2 /* HaloX@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0179A40D19E7018D00DC11B2 /* HaloX@2x.png */; };
 		01B9CEE119E30A82003673F6 /* LifeBarExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */; };
 		01B9CEE219E30A82003673F6 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE019E30A82003673F6 /* spark.png */; };
 		01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE319E30E69003673F6 /* EdgeHit.sks */; };
@@ -81,6 +83,8 @@
 		011D94AC19D83D2E00E14A3F /* Starfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Starfield@2x.png"; sourceTree = "<group>"; };
 		013A378019E2D5F800EC1CD4 /* HaloExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = HaloExplosion.sks; path = ../HaloExplosion.sks; sourceTree = "<group>"; };
 		0179A40919E6DD1F00DC11B2 /* Ball.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
+		0179A40B19E6ED2200DC11B2 /* Halo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Halo.swift; sourceTree = "<group>"; };
+		0179A40D19E7018D00DC11B2 /* HaloX@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HaloX@2x.png"; sourceTree = "<group>"; };
 		01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LifeBarExplosion.sks; sourceTree = "<group>"; };
 		01B9CEE019E30A82003673F6 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		01B9CEE319E30E69003673F6 /* EdgeHit.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EdgeHit.sks; sourceTree = "<group>"; };
@@ -197,6 +201,7 @@
 				011D94A919D83D2E00E14A3F /* BlueBar@2x.png */,
 				011D94AA19D83D2E00E14A3F /* Cannon@2x.png */,
 				011D94AB19D83D2E00E14A3F /* Halo@2x.png */,
+				0179A40D19E7018D00DC11B2 /* HaloX@2x.png */,
 				011D94AC19D83D2E00E14A3F /* Starfield@2x.png */,
 			);
 			path = images;
@@ -219,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				0179A40919E6DD1F00DC11B2 /* Ball.swift */,
+				0179A40B19E6ED2200DC11B2 /* Halo.swift */,
 				01EC34E019E44DEC0049E6D0 /* Menu.swift */,
 			);
 			name = Classes;
@@ -330,6 +336,7 @@
 				011D94B019D83D2E00E14A3F /* Ammo3@2x.png in Resources */,
 				011D94B719D83D2E00E14A3F /* Halo@2x.png in Resources */,
 				011D94AF19D83D2E00E14A3F /* Ammo2@2x.png in Resources */,
+				0179A40E19E7018D00DC11B2 /* HaloX@2x.png in Resources */,
 				01CD8CB019E6D506002381D4 /* BallTrail.sks in Resources */,
 				011D94B619D83D2E00E14A3F /* Cannon@2x.png in Resources */,
 				01EC34D719E44A1F0049E6D0 /* Explosion.caf in Resources */,
@@ -356,6 +363,7 @@
 				0179A40A19E6DD1F00DC11B2 /* Ball.swift in Sources */,
 				01EC34E119E44DEC0049E6D0 /* Menu.swift in Sources */,
 				011D947D19D83B3900E14A3F /* AppDelegate.swift in Sources */,
+				0179A40C19E6ED2200DC11B2 /* Halo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
