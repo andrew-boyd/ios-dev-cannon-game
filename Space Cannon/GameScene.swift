@@ -18,6 +18,8 @@ func randomInRange(low:CGFloat, high:CGFloat) -> CGFloat {
 }
 
 var _gameOver = true
+var _activeHaloCount:Int = 0
+var _activeBomb:Bool = false
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 	
@@ -34,7 +36,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			_scoreLabel.text = "Score: " + String(_score)
 		}
 	}
-	
 	
 	var pointValue:Int = 1 {
 		didSet {
@@ -227,6 +228,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			ball.physicsBody?.restitution = 1.0
 			ball.physicsBody?.linearDamping = 0.0
 			ball.physicsBody?.friction = 0.0
+			ball.physicsBody?.usesPreciseCollisionDetection = true
 			ball.physicsBody?.categoryBitMask = BallCategory
 			ball.physicsBody?.collisionBitMask = EdgeCategory
 			ball.physicsBody?.contactTestBitMask = EdgeCategory
@@ -315,9 +317,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			
 			let haloNode = firstBody.node as Halo
 			
-			if haloNode.userData != nil {
+			if haloNode.userData?.valueForKey("Multiplier") != nil {
 				if haloNode.userData?.valueForKey("Multiplier") as Bool {
 					self.pointValue++
+				}
+			}
+			
+			if haloNode.userData?.valueForKey("isBomb") != nil {
+				if haloNode.userData?.valueForKey("isBomb") as Bool {
+					_mainLayer.enumerateChildNodesWithName("halo") {
+						node, stop in
+						
+						// give points for all on screen halos
+						self._score += self.pointValue
+						
+						self.addExplosion(node.position, name: "HaloExplosion")
+						node.removeFromParent()
+					}
+					
+					// compensate for adding score twice
+					self._score -= self.pointValue
 				}
 			}
 			
@@ -330,6 +349,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			// collision between halo and shield
 			self.addExplosion(contact.contactPoint, name: "HaloExplosion")
 			self.runAction(explosionSound)
+			
+			// check if hit by bomb and remove all shields
+			let haloNode = firstBody.node as Halo
+			if haloNode.userData?.valueForKey("isBomb") != nil {
+				if haloNode.userData?.valueForKey("isBomb") as Bool {
+					_mainLayer.enumerateChildNodesWithName("shield") { node, stop in
+						self.addExplosion(node.position, name: "HaloExplosion")
+						node.removeFromParent()
+					}
+				}
+			}
 			
 			// only destroy one shield
 			firstBody.categoryBitMask = 0
@@ -426,11 +456,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 				self.pointValue = 1
 			}
 		}
+		
+		// reset halo count because below loop will recount
+		_activeHaloCount = 0
+		_activeBomb = false
 		_mainLayer.enumerateChildNodesWithName("halo") {
 			node, stop in
+			
+			let node = node as Halo
+			
+			_activeHaloCount++
+			
+			// check if a bomb is on screen
+			if node.userData?.valueForKey("isBomb") != nil {
+				if node.userData?.valueForKey("isBomb") as Bool {
+					//reset bomb flag
+					_activeBomb = true
+				}
+			}
+
+			
 			if (node.position.y + node.frame.size.height < 0) {
 				node.removeFromParent()
 			}
+			
 		}
 	}
    
