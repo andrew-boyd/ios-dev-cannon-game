@@ -38,7 +38,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	
 	var pointValue:Int = 1 {
 		didSet {
-			_pointLabel.text = "Point Value: " + String(pointValue)
+			_pointLabel.text = "Multiplier: " + String(pointValue)
 		}
 	}
 	
@@ -148,7 +148,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_pointLabel.position = CGPointMake(15, 30)
 		_pointLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
 		_pointLabel.fontSize = 15
-		_pointLabel.text = "Point Value: " + String(pointValue)
 		self.addChild(_pointLabel)
 		
 		// setup Menu
@@ -298,6 +297,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			ballNode.bounces++
 			if ballNode.bounces > 3 {
 				ballNode.removeFromParent()
+				self.pointValue = 1
 			}
 			
 			self.runAction(bounceSound)
@@ -311,6 +311,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		}
 		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == BallCategory {
 			// collision between halo and ball
+			self._score += self.pointValue
+			
 			let haloNode = firstBody.node as Halo
 			
 			if haloNode.userData != nil {
@@ -321,7 +323,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			
 			self.addExplosion(firstBody.node!.position, name: "HaloExplosion")
 			self.runAction(explosionSound)
-			self._score += self.pointValue
 			firstBody.node?.removeFromParent()
 			secondBody.node?.removeFromParent()
 		}
@@ -422,6 +423,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			
 			if !CGRectContainsPoint(self.frame, node.position) {
 				node.removeFromParent()
+				self.pointValue = 1
 			}
 		}
 		_mainLayer.enumerateChildNodesWithName("halo") {
