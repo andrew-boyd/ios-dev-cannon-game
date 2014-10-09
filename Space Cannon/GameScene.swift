@@ -206,6 +206,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			ball.physicsBody?.collisionBitMask = EdgeCategory
 			ball.physicsBody?.contactTestBitMask = EdgeCategory
 			
+			// create trail for ball
+			let ballTrailPath = NSBundle.mainBundle().pathForResource("BallTrail", ofType: "sks")!
+			let ballTrail = NSKeyedUnarchiver.unarchiveObjectWithFile(ballTrailPath) as SKEmitterNode
+			ballTrail.targetNode = _mainLayer
+			ball.addChild(ballTrail)
+			
 			_mainLayer.addChild(ball)
 		}
 	}
