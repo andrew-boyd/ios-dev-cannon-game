@@ -22,6 +22,7 @@ class Ball:SKSpriteNode {
 	}
 	
 	var trail:SKEmitterNode?
+	var bounces:Int = 0
 	
 	func updateTrail() {
 		if (self.trail != nil) {
@@ -30,8 +31,6 @@ class Ball:SKSpriteNode {
 	}
 	
 	override func removeFromParent() {
-		super.removeFromParent()
-		
 		if (self.trail != nil) {
 			self.trail!.particleBirthRate = 0
 			
@@ -41,5 +40,7 @@ class Ball:SKSpriteNode {
 				])
 			self.runAction(removeTrail)
 		}
+		
+		super.removeFromParent()
 	}
 }

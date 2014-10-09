@@ -271,6 +271,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == EdgeCategory {
 			// collision between ball and wall
 			self.addExplosion(contact.contactPoint, name: "EdgeHit")
+			
+			let ballNode = firstBody.node as Ball
+			ballNode.bounces++
+			if ballNode.bounces > 3 {
+				ballNode.removeFromParent()
+			}
+			
 			self.runAction(bounceSound)
 		}
 		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == EdgeCategory {
