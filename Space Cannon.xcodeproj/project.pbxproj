@@ -31,6 +31,7 @@
 		01B9CEE119E30A82003673F6 /* LifeBarExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */; };
 		01B9CEE219E30A82003673F6 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE019E30A82003673F6 /* spark.png */; };
 		01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE319E30E69003673F6 /* EdgeHit.sks */; };
+		01D9BF4E19E6D08E008A768E /* BallTrail.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01D9BF4D19E6D08E008A768E /* BallTrail.sks */; };
 		01EC34D519E44A1F0049E6D0 /* Bounce.caf in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34D019E44A1F0049E6D0 /* Bounce.caf */; };
 		01EC34D619E44A1F0049E6D0 /* DeepExplosion.caf in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34D119E44A1F0049E6D0 /* DeepExplosion.caf */; };
 		01EC34D719E44A1F0049E6D0 /* Explosion.caf in Resources */ = {isa = PBXBuildFile; fileRef = 01EC34D219E44A1F0049E6D0 /* Explosion.caf */; };
@@ -81,6 +82,7 @@
 		01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LifeBarExplosion.sks; sourceTree = "<group>"; };
 		01B9CEE019E30A82003673F6 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		01B9CEE319E30E69003673F6 /* EdgeHit.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EdgeHit.sks; sourceTree = "<group>"; };
+		01D9BF4D19E6D08E008A768E /* BallTrail.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BallTrail.sks; sourceTree = "<group>"; };
 		01EC34D019E44A1F0049E6D0 /* Bounce.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Bounce.caf; sourceTree = "<group>"; };
 		01EC34D119E44A1F0049E6D0 /* DeepExplosion.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DeepExplosion.caf; sourceTree = "<group>"; };
 		01EC34D219E44A1F0049E6D0 /* Explosion.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Explosion.caf; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 		011D947919D83B3900E14A3F /* Space Cannon */ = {
 			isa = PBXGroup;
 			children = (
+				01D9BF4D19E6D08E008A768E /* BallTrail.sks */,
 				013A378019E2D5F800EC1CD4 /* HaloExplosion.sks */,
 				011D947C19D83B3900E14A3F /* AppDelegate.swift */,
 				011D947E19D83B3900E14A3F /* GameScene.sks */,
@@ -324,6 +327,7 @@
 				011D94B019D83D2E00E14A3F /* Ammo3@2x.png in Resources */,
 				011D94B719D83D2E00E14A3F /* Halo@2x.png in Resources */,
 				011D94AF19D83D2E00E14A3F /* Ammo2@2x.png in Resources */,
+				01D9BF4E19E6D08E008A768E /* BallTrail.sks in Resources */,
 				011D94B619D83D2E00E14A3F /* Cannon@2x.png in Resources */,
 				01EC34D719E44A1F0049E6D0 /* Explosion.caf in Resources */,
 				01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */,

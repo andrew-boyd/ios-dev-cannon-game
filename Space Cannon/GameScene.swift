@@ -19,12 +19,15 @@ func randomInRange(low:CGFloat, high:CGFloat) -> CGFloat {
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 	
+	let userDefaults = NSUserDefaults.standardUserDefaults()
+	
 	let _mainLayer = SKNode()
 	let _cannon = SKSpriteNode(imageNamed: "Cannon")
 	var _ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
 	var _scoreLabel = SKLabelNode(fontNamed: "DIN Alternate")
 	var ammo = 5
 	var _score = 0
+	var keyTopScore = "TopScore"
 	let SHOOT_SPEED = 1000.0
 	let HaloLowAngle = CGFloat(200 * M_PI / 180.0)
 	let HaloMaxAngle = CGFloat(340 * M_PI / 180.0)
@@ -63,13 +66,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		// Add Edges
 		let leftEdge = SKNode()
-		leftEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height * 2))
+		leftEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height + 100))
 		leftEdge.position = CGPointMake(5.0, 0.0)
 		leftEdge.zPosition = 3
 		leftEdge.physicsBody?.categoryBitMask = EdgeCategory
 		
 		let rightEdge = SKNode()
-		rightEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height * 2))
+		rightEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height + 100))
 		rightEdge.position = CGPointMake(self.size.width - 5.0, 0.0)
 		rightEdge.zPosition = 3
 		rightEdge.physicsBody?.categoryBitMask = EdgeCategory
@@ -106,7 +109,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 				SKAction.runBlock(spawnHalo)
 			])
 		
-		self.runAction(SKAction.repeatActionForever(spawnHaloAction))
+		self.runAction(SKAction.repeatActionForever(spawnHaloAction), withKey: "spawnHalo")
 		
 		// refill Ammo
 		let incrementAmmo = SKAction.sequence([
@@ -131,6 +134,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_menu.zPosition = 10
 		self.addChild(_menu)
 		
+		// load top score
+		_menu.topScore = userDefaults.integerForKey(keyTopScore)
+		
 		// set initial values
 		var ammo = 5
 		updateAmmo()
@@ -141,6 +147,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
 	
 	func newGame() {
+		_mainLayer.removeAllChildren()
+		
+		// set initial values
+		self.actionForKey("spawnHalo")?.speed = 1
 		_gameOver = false
 		_menu.hidden = true
 		_scoreLabel.hidden = false
@@ -148,9 +158,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		updateAmmo()
 		setScore(0)
 		
-		_mainLayer.removeAllChildren()
-		
-		//setup shields
+		// setup shields
 		for (var i = 0; i < 6; i++) {
 			var shield = SKSpriteNode(imageNamed: "Block")
 			shield.name = "shield"
@@ -162,7 +170,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			_mainLayer.addChild(shield)
 		}
 		
-		// add life bar
+		// setup life bar
 		let lifeBar = SKSpriteNode(imageNamed: "BlueBar")
 		lifeBar.position = CGPointMake(self.size.width/2, _cannon.size.height/2)
 		lifeBar.size.width = self.size.width
@@ -215,6 +223,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
 	
 	func spawnHalo() {
+		// inscrease spawn speed
+		let spawnHaloAction = self.actionForKey("spawnHalo")
+		if (spawnHaloAction?.speed < 1.5) {
+			spawnHaloAction?.speed += 0.01
+		}
+		
 		let halo = SKSpriteNode(imageNamed: "Halo")
 		halo.name = "halo"
 		halo.position = CGPointMake(
@@ -269,6 +283,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			// collision between halo and shield
 			self.addExplosion(contact.contactPoint, name: "HaloExplosion")
 			self.runAction(explosionSound)
+			
+			// only destroy one shield
+			firstBody.categoryBitMask = 0
+			
 			firstBody.node?.removeFromParent()
 			secondBody.node?.removeFromParent()
 		}
@@ -314,6 +332,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		if _score > _menu.topScore {
 			_menu.setTopScore(_score)
+			userDefaults.setInteger(_score, forKey: keyTopScore)
+			userDefaults.synchronize()
 		}
 	}
     
@@ -349,6 +369,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_mainLayer.enumerateChildNodesWithName("ball") {
 			node, stop in
 			if !CGRectContainsPoint(self.frame, node.position) {
+				node.removeFromParent()
+			}
+		}
+		_mainLayer.enumerateChildNodesWithName("halo") {
+			node, stop in
+			if (node.position.y + node.frame.size.height < 0) {
 				node.removeFromParent()
 			}
 		}
