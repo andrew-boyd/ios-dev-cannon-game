@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class Menu: SKNode {
+class Menu:SKNode {
 	
 	var score:Int = 0
 	var topScore:Int = 0
