@@ -186,7 +186,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			
 			self.runAction(laserSound)
 			
-			let ball = SKSpriteNode(imageNamed: "Ball")
+			let ball = Ball(imageNamed: "Ball")
 			ball.name = "ball"
 			let rotationVector = radiansToVector(_cannon.zRotation)
 			
@@ -210,7 +210,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			let ballTrailPath = NSBundle.mainBundle().pathForResource("BallTrail", ofType: "sks")!
 			let ballTrail = NSKeyedUnarchiver.unarchiveObjectWithFile(ballTrailPath) as SKEmitterNode
 			ballTrail.targetNode = _mainLayer
-			ball.addChild(ballTrail)
+			ball.trail = ballTrail
+			_mainLayer.addChild(ballTrail)
 			
 			_mainLayer.addChild(ball)
 		}
@@ -374,6 +375,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		_mainLayer.enumerateChildNodesWithName("ball") {
 			node, stop in
+			
+			let node = node as Ball
+			
+			node.updateTrail()
+			
 			if !CGRectContainsPoint(self.frame, node.position) {
 				node.removeFromParent()
 			}
