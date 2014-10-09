@@ -17,6 +17,8 @@ func randomInRange(low:CGFloat, high:CGFloat) -> CGFloat {
 	return CGFloat(randomAssNumber)
 }
 
+var _gameOver = true
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
 	
 	let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -25,8 +27,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	let _cannon = SKSpriteNode(imageNamed: "Cannon")
 	var _ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
 	var _scoreLabel = SKLabelNode(fontNamed: "DIN Alternate")
+	var _pointLabel = SKLabelNode(fontNamed: "DIN Alternate")
+	
+	var _score:Int = 0 {
+		didSet {
+			_scoreLabel.text = "Score: " + String(_score)
+		}
+	}
+	
+	
+	var pointValue:Int = 1 {
+		didSet {
+			_pointLabel.text = "Point Value: " + String(pointValue)
+		}
+	}
+	
 	var ammo = 5
-	var _score = 0
 	var keyTopScore = "TopScore"
 	let SHOOT_SPEED = 1000.0
 	let HaloLowAngle = CGFloat(200 * M_PI / 180.0)
@@ -48,7 +64,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	let LifeBarCategory:UInt32 = 0x1 << 4;
 	
 	var _didShoot = false
-	var _gameOver = true
 	
     override func didMoveToView(view: SKView) {
 		
@@ -129,6 +144,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_scoreLabel.fontSize = 15
 		self.addChild(_scoreLabel)
 		
+		// setup point value display
+		_pointLabel.position = CGPointMake(15, 30)
+		_pointLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
+		_pointLabel.fontSize = 15
+		_pointLabel.text = "Point Value: " + String(pointValue)
+		self.addChild(_pointLabel)
+		
 		// setup Menu
 		_menu.position = CGPointMake(self.size.width/2, self.size.height - 220)
 		_menu.zPosition = 10
@@ -140,10 +162,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		// set initial values
 		var ammo = 5
 		updateAmmo()
-		setScore(0)
+		_score = 0
+		pointValue = 1
 		_menu.setScore(0)
 		_menu.setTopScore(_menu.topScore)
 		_scoreLabel.hidden = true
+		_pointLabel.hidden = true
 	}
 	
 	func newGame() {
@@ -154,9 +178,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_gameOver = false
 		_menu.hidden = true
 		_scoreLabel.hidden = false
+		_pointLabel.hidden = false
 		var ammo = 5
 		updateAmmo()
-		setScore(0)
+		_score = 0
+		pointValue = 1
 		
 		// setup shields
 		for (var i = 0; i < 6; i++) {
@@ -223,11 +249,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			_ammoDisplay.texture = SKTexture(imageNamed: ammoTextureName)
 		}
 	}
-
-	func setScore(score:Int) {
-		_score = score
-		_scoreLabel.text = "Score: " + String(_score)
-	}
 	
 	func spawnHalo() {
 		// inscrease spawn speed
@@ -236,7 +257,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			spawnHaloAction?.speed += 0.01
 		}
 		
-		let halo = Halo(imageNamed: "Halo")
+		let halo = Halo()
 		halo.name = "halo"
 		halo.position = CGPointMake(
 			randomInRange(halo.size.width/2, self.size.width - (halo.size.width/2)),
@@ -290,9 +311,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		}
 		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == BallCategory {
 			// collision between halo and ball
+			let haloNode = firstBody.node as Halo
+			
+			if haloNode.userData != nil {
+				if haloNode.userData?.valueForKey("Multiplier") as Bool {
+					self.pointValue++
+				}
+			}
+			
 			self.addExplosion(firstBody.node!.position, name: "HaloExplosion")
 			self.runAction(explosionSound)
-			setScore(_score + 1)
+			self._score += self.pointValue
 			firstBody.node?.removeFromParent()
 			secondBody.node?.removeFromParent()
 		}
@@ -344,6 +373,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		_menu.hidden = false
 		_scoreLabel.hidden = true
+		_pointLabel.hidden = true
 		_gameOver = true
 		_menu.setScore(_score)
 		
