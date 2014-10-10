@@ -24,6 +24,18 @@ var _activeHaloCount:Int = 0
 var _multishotMode = false
 var _activeBomb:Bool = false
 
+var _scoreLabel = SKLabelNode(fontNamed: "DIN Alternate")
+
+// this variable is a calculated value and can have
+// willSet and didSet functions
+var _score:Int = 0 {
+	// function that runs after the calulated value of
+	// the _score variable is set in Swift.
+	didSet {
+		_scoreLabel.text = "Score: " + String(_score)
+	}
+}
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
 	
 	// game variables that can stay in our scene
@@ -31,21 +43,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	let _mainLayer = SKNode()
 	let _cannon = SKSpriteNode(imageNamed: "Cannon")
 	var _ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
-	var _scoreLabel = SKLabelNode(fontNamed: "DIN Alternate")
 	var _pointLabel = SKLabelNode(fontNamed: "DIN Alternate")
 	var keyTopScore = "TopScore"
 	
 	var _shieldPool = [SKNode]()
-	
-	// this variable is a calculated value and can have
-	// willSet and didSet functions
-	var _score:Int = 0 {
-		// function that runs after the calulated value of
-		// the _score variable is set in Swift.
-		didSet {
-			_scoreLabel.text = "Score: " + String(_score)
-		}
-	}
 	
 	var pointValue:Int = 1 {
 		didSet {
@@ -69,12 +70,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	var _killCount:Int = 0 {
 		didSet {
 			if _killCount >= _multishotTargetKillCount {
-				_multishotTargetKillCount += 2
+				_multishotTargetKillCount += 20
 				spawnMultishotPowerUp()
 			}
 		}
 	}
-	var _multishotTargetKillCount:Int = 2
+	var _multishotTargetKillCount:Int = 15
 	
 	// canonball settings
 	let SHOOT_SPEED = 1000.0
@@ -236,7 +237,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		// set initial values
 		self.actionForKey("spawnHalo")?.speed = 1
 		_gameOver = false
-		_menu.hidden = true
+		_menu.hideMenu()
 		_scoreLabel.hidden = false
 		_pointLabel.hidden = false
 		var ammo = 5
@@ -263,7 +264,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	func shoot() {
 		if _multishotMode && self.ammo > 0 {
 			let multishotAction = SKAction.sequence([
-				SKAction.waitForDuration(0.15),
+				SKAction.waitForDuration(0.1),
 				SKAction.runBlock(fireShot)
 				])
 			self.runAction(SKAction.repeatAction(multishotAction, count: 5))
@@ -276,7 +277,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		if ammo == 0 && _multishotMode {
 			disableMultishotMode()
 		}
-		
 	}
 	
 	func fireShot() {
@@ -316,8 +316,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	func spawnHalo() {
 		// inscrease spawn speed
 		let spawnHaloAction = self.actionForKey("spawnHalo")
-		if (spawnHaloAction?.speed < 1.5) {
-			spawnHaloAction?.speed += 0.01
+		
+		if spawnHaloAction?.speed < 2.75 {
+			spawnHaloAction?.speed = 1.0 + CGFloat(_score)/100.00
+		}
+		
+		if _gameOver {
+			spawnHaloAction?.speed = 1.0
 		}
 		
 		let halo = Halo()
@@ -387,32 +392,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
 	
 	func didBeginContact(contact: SKPhysicsContact) {
-		var firstBody:SKPhysicsBody
-		var secondBody:SKPhysicsBody
 		
-		if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
-			firstBody = contact.bodyA
-			secondBody = contact.bodyB
-		} else {
-			firstBody = contact.bodyB
-			secondBody = contact.bodyA
+		var firstBody = SKPhysicsBody()
+		var secondBody = SKPhysicsBody()
+		
+		if contact.bodyA? != nil && contact.bodyB? != nil {
+			if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+				firstBody = contact.bodyA
+				secondBody = contact.bodyB
+			} else {
+				firstBody = contact.bodyB
+				secondBody = contact.bodyA
+			}
 		}
-		
+			
 		if firstBody.node? != nil && secondBody.node? != nil {
 		
 			if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == EdgeCategory {
 				// collision between ball and wall
-				self.addExplosion(contact.contactPoint, name: "EdgeHit")
+				var ballNode = firstBody.node as Ball
 				
-				let ballNode = firstBody.node as Ball
+				self.addExplosion(contact.contactPoint, name: "EdgeHit")
+				self.runAction(bounceSound)
 				
 				ballNode.bounces++
 				if ballNode.bounces > 3 {
-					ballNode.removeFromParent()
 					self.pointValue = 1
+					ballNode.hidden = true
 				}
-				
-				self.runAction(bounceSound)
 			}
 			if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ShieldUpCategory {
 				// collision between ball and shield powerup
@@ -440,7 +447,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			}
 			if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == BallCategory {
 				// collision between halo and ball
-				self._score += self.pointValue
+				_score += self.pointValue
 				_killCount += 1
 				
 				let haloNode = firstBody.node as Halo
@@ -455,7 +462,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 							node, stop in
 							
 							// give points for all on screen halos
-							self._score += self.pointValue
+							_score += self.pointValue
 							self._killCount += 1
 							
 							self.addExplosion(node.position, name: "HaloExplosion")
@@ -464,7 +471,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 						
 						// compensate for adding score and kill twice
 						_killCount -= 1
-						self._score -= self.pointValue
+						_score -= self.pointValue
 					}
 				}
 				
@@ -474,7 +481,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 				self.addExplosion(firstBody.node!.position, name: "HaloExplosion")
 				self.runAction(explosionSound)
 				firstBody.node?.removeFromParent()
-				secondBody.node?.removeFromParent()
+				secondBody.node?.hidden = true
 			}
 			if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == ShieldCategory {
 				// collision between halo and shield
@@ -543,7 +550,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			node.removeFromParent()
 		}
 		
-		_menu.hidden = false
+		runAction(
+			SKAction.sequence([
+				SKAction.waitForDuration(1),
+				SKAction.runBlock({ () -> Void in
+					self._menu.showMenu()
+				})
+			])
+		)
+		
 		_scoreLabel.hidden = true
 		_pointLabel.hidden = true
 		_gameOver = true
@@ -568,7 +583,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	
 	override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
 		for touch:AnyObject in touches {
-			if _gameOver {
+			if _gameOver && _menu.touchable {
 				var n = _menu.nodeAtPoint(touch.locationInNode(_menu))
 				
 				if n.name == "Play" {
@@ -591,6 +606,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			let node = node as Ball
 			
 			node.updateTrail()
+			
+			if node.hidden == true {
+				node.removeFromParent()
+			}
 			
 			if !CGRectContainsPoint(self.frame, node.position) {
 				node.removeFromParent()

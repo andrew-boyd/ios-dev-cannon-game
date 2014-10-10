@@ -10,6 +10,8 @@ import SpriteKit
 
 class Menu:SKNode {
 	
+	var touchable = true
+	
 	var score:Int = 0
 	var topScore:Int = 0
 	
@@ -25,20 +27,20 @@ class Menu:SKNode {
 		
 		scoreLabel.fontSize = 30
 		scoreLabel.position = CGPointMake(-52, -20)
-		self.addChild(scoreLabel)
+		scoreBoard.addChild(scoreLabel)
 		
 		topScoreLabel.fontSize = 30
 		topScoreLabel.position = CGPointMake(48, -20)
-		self.addChild(topScoreLabel)
+		scoreBoard.addChild(topScoreLabel)
 		
 		title.position = CGPointMake(0, 140)
 		self.addChild(title)
 		
-		title.position = CGPointMake(0, 70)
+		scoreBoard.position = CGPointMake(0, 70)
 		self.addChild(scoreBoard)
 		
 		playButton.name = "Play"
-		playButton.position = CGPointMake(0, -70)
+		playButton.position = CGPointMake(0, 0)
 		self.addChild(playButton)
 	}
 
@@ -54,5 +56,62 @@ class Menu:SKNode {
 	func setTopScore(topScore:Int) {
 		self.topScore = topScore
 		topScoreLabel.text = String(self.topScore)
+	}
+	
+	func showMenu() {
+		self.hidden = false
+		
+		let fadeIn = SKAction.fadeInWithDuration(0.5)
+		
+		title.position = CGPointMake(0, 280)
+		title.alpha = 0
+		
+		let animateTitle = SKAction.group([
+			SKAction.moveToY(140, duration: 0.5),
+			fadeIn
+			])
+		animateTitle.timingMode = SKActionTimingMode.EaseOut
+		
+		title.runAction(animateTitle)
+		
+		scoreBoard.xScale = 4
+		scoreBoard.yScale = 4
+		scoreBoard.alpha = 0
+		
+		let animateScoreBoard = SKAction.group([
+				SKAction.scaleTo(1.0, duration: 0.5),
+				fadeIn
+			])
+		scoreBoard.runAction(animateScoreBoard)
+		
+		playButton.alpha = 0
+		let animatePlayButton = SKAction.fadeInWithDuration(1.0)
+		animatePlayButton.timingMode = SKActionTimingMode.EaseIn
+		playButton.runAction(
+			SKAction.sequence([
+				animatePlayButton,
+				SKAction.runBlock({
+					self.touchable = true
+				})
+			])
+		)
+	}
+	
+	func hideMenu() {
+		self.touchable = false
+		
+		let animateMenu = SKAction.scaleTo(0.0, duration: 0.5)
+		animateMenu.timingMode = SKActionTimingMode.EaseIn
+		
+		self.runAction(
+			SKAction.sequence([
+				animateMenu,
+				SKAction.runBlock({
+					self.hidden = true
+					self.xScale = 1
+					self.yScale = 1
+				})
+			])
+		)
 	}
 }
