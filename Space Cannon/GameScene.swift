@@ -24,6 +24,17 @@ var _activeHaloCount:Int = 0
 var _multishotMode = false
 var _activeBomb:Bool = false
 
+let _pauseButton = SKSpriteNode(imageNamed: "PauseButton")
+let _resumeButton = SKSpriteNode(imageNamed: "ResumeButton")
+var _gamePaused:Bool = false {
+	didSet {
+		if !_gameOver {
+			_pauseButton.hidden = _gamePaused
+			_resumeButton.hidden = !_gamePaused
+		}
+	}
+}
+
 var _scoreLabel = SKLabelNode(fontNamed: "DIN Alternate")
 
 // this variable is a calculated value and can have
@@ -37,6 +48,8 @@ var _score:Int = 0 {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
+	
+	
 	
 	// game variables that can stay in our scene
 	let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -201,6 +214,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			])
 		self.runAction(SKAction.repeatActionForever(incrementAmmo))
 		
+		// set up pause button
+		_pauseButton.position = CGPoint(x: self.size.width - 30, y: 20)
+		self.addChild(_pauseButton)
+		
+		//set up resume button
+		_resumeButton.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+		self.addChild(_resumeButton)
+		
 		// setup score display
 		_scoreLabel.position = CGPointMake(15, 10)
 		_scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
@@ -229,6 +250,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_menu.setTopScore(_menu.topScore)
 		_scoreLabel.hidden = true
 		_pointLabel.hidden = true
+		_pauseButton.hidden = true
+		_resumeButton.hidden = true
 	}
 	
 	func newGame() {
@@ -245,6 +268,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		pointValue = 1
 		disableMultishotMode()
 		_killCount = 0
+		_pauseButton.hidden = false
 		
 		// add shields to game
 		while _shieldPool.count > 0 {
@@ -563,6 +587,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_pointLabel.hidden = true
 		_gameOver = true
 		_menu.setScore(_score)
+		_pauseButton.hidden = true
 		
 		if _score > _menu.topScore {
 			_menu.setTopScore(_score)
@@ -575,8 +600,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /* Called when a touch begins */
         
         for touch: AnyObject in touches {
-			if !(_gameOver) {
-				_didShoot = true
+			if !_gameOver && !_gamePaused  {
+				if !(_pauseButton.containsPoint(touch.locationInNode(_pauseButton.parent))) {
+					_didShoot = true
+				}
 			}
 		}
     }
@@ -588,6 +615,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 				
 				if n.name == "Play" {
 					self.newGame()
+				}
+			} else if !_gameOver {
+				if _gamePaused {
+					if _resumeButton.containsPoint(touch.locationInNode(_resumeButton.parent)) {
+						_gamePaused = false
+					}
+				} else {
+					if _pauseButton.containsPoint(touch.locationInNode(_pauseButton.parent)) {
+						_gamePaused = true
+					}
 				}
 			}
 		}
@@ -652,5 +689,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+		self.paused = _gamePaused
     }
 }
