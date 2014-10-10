@@ -30,6 +30,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	var _ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
 	var _scoreLabel = SKLabelNode(fontNamed: "DIN Alternate")
 	var _pointLabel = SKLabelNode(fontNamed: "DIN Alternate")
+	var keyTopScore = "TopScore"
+	
+	var _shieldPool = [SKNode]()
 	
 	var _score:Int = 0 {
 		didSet {
@@ -44,7 +47,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
 	
 	var ammo = 5
-	var keyTopScore = "TopScore"
 	let SHOOT_SPEED = 1000.0
 	let HaloLowAngle = CGFloat(200 * M_PI / 180.0)
 	let HaloMaxAngle = CGFloat(340 * M_PI / 180.0)
@@ -110,6 +112,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_ammoDisplay.anchorPoint = CGPointMake(0.5, 0.0)
 		_ammoDisplay.position = _cannon.position
 		self.addChild(_ammoDisplay)
+		
+		// setup shield pool
+		// setup shields
+		for (var i = 0; i < 6; i++) {
+			var shield = SKSpriteNode(imageNamed: "Block")
+			shield.name = "shield"
+			shield.size.width = self.size.width/6
+			shield.position = CGPointMake(CGFloat(self.size.width/12 + (shield.size.width * CGFloat(i))), _cannon.size.height/2 + 15.0)
+			shield.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: shield.size.width*0.75, height: shield.size.height*0.75))
+			shield.physicsBody?.categoryBitMask = ShieldCategory
+			shield.physicsBody?.collisionBitMask = 0
+			_shieldPool.append(shield)
+		}
 		
 		// create cannon rotation actions
 		var rotateCannon = SKAction.sequence([
@@ -184,16 +199,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_score = 0
 		pointValue = 1
 		
-		// setup shields
-		for (var i = 0; i < 6; i++) {
-			var shield = SKSpriteNode(imageNamed: "Block")
-			shield.name = "shield"
-			shield.size.width = self.size.width/6
-			shield.position = CGPointMake(CGFloat(self.size.width/12 + (shield.size.width * CGFloat(i))), _cannon.size.height/2 + 15.0)
-			shield.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: shield.size.width*0.75, height: shield.size.height*0.75))
-			shield.physicsBody?.categoryBitMask = ShieldCategory
-			shield.physicsBody?.collisionBitMask = 0
-			_mainLayer.addChild(shield)
+		// add shields to game
+		while _shieldPool.count > 0 {
+			_mainLayer.addChild(_shieldPool[0])
+			_shieldPool.removeAtIndex(0)
 		}
 		
 		// setup life bar
@@ -279,6 +288,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_mainLayer.addChild(halo)
 	}
 	
+	func spawnShieldPowerUp() {
+		
+	}
+	
 	func didBeginContact(contact: SKPhysicsContact) {
 		var firstBody:SKPhysicsBody
 		var secondBody:SKPhysicsBody
@@ -321,9 +334,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 				if haloNode.userData?.valueForKey("Multiplier") as Bool {
 					self.pointValue++
 				}
-			}
-			
-			if haloNode.userData?.valueForKey("isBomb") != nil {
+			} else if haloNode.userData?.valueForKey("isBomb") != nil {
 				if haloNode.userData?.valueForKey("isBomb") as Bool {
 					_mainLayer.enumerateChildNodesWithName("halo") {
 						node, stop in
@@ -364,6 +375,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			// only destroy one shield
 			firstBody.categoryBitMask = 0
 			
+			// add removed shield back to shield pool
+			_shieldPool.append(secondBody.node!)
+			
 			firstBody.node?.removeFromParent()
 			secondBody.node?.removeFromParent()
 		}
@@ -399,6 +413,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			node.removeFromParent()
 		}
 		_mainLayer.enumerateChildNodesWithName("shield") { node, stop in
+			self._shieldPool.append(node)
 			node.removeFromParent()
 		}
 		
