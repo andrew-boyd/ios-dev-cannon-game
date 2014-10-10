@@ -8,6 +8,7 @@
 
 import SpriteKit
 
+// global helper functions
 func radiansToVector(radians:CGFloat) -> CGVector {
 	var vector = CGVector(dx: CGFloat(cosf(Float(radians))), dy: CGFloat(sinf(Float(radians))))
 	return vector
@@ -17,14 +18,15 @@ func randomInRange(low:CGFloat, high:CGFloat) -> CGFloat {
 	return CGFloat(randomAssNumber)
 }
 
+// global variables we need to access across classes
 var _gameOver = true
 var _activeHaloCount:Int = 0
 var _activeBomb:Bool = false
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 	
+	// game variables that can stay in our scene
 	let userDefaults = NSUserDefaults.standardUserDefaults()
-	
 	let _mainLayer = SKNode()
 	let _cannon = SKSpriteNode(imageNamed: "Cannon")
 	var _ammoDisplay = SKSpriteNode(imageNamed: "Ammo5")
@@ -34,7 +36,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	
 	var _shieldPool = [SKNode]()
 	
+	// this variable is a calculated value and can have
+	// willSet and didSet functions
 	var _score:Int = 0 {
+		// function that runs after the calulated value of
+		// the _score variable is set in Swift.
 		didSet {
 			_scoreLabel.text = "Score: " + String(_score)
 		}
@@ -46,26 +52,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		}
 	}
 	
+	// canonball settings
 	var ammo = 5
 	let SHOOT_SPEED = 1000.0
+	
+	// halo generation settings
 	let HaloLowAngle = CGFloat(200 * M_PI / 180.0)
 	let HaloMaxAngle = CGFloat(340 * M_PI / 180.0)
 	let HaloSpeed:CGFloat = 100.0
 
+	// instantiate the menu
 	var _menu = Menu()
 	
+	// preload sounds as variables we can reference to avoid delays on load
 	let bounceSound = SKAction.playSoundFileNamed("Bounce.caf", waitForCompletion: false)
 	let explosionSound = SKAction.playSoundFileNamed("Explosion.caf", waitForCompletion: false)
 	let deepExplosionSound = SKAction.playSoundFileNamed("DeepExplosion.caf", waitForCompletion: false)
 	let laserSound = SKAction.playSoundFileNamed("Laser.caf", waitForCompletion: false)
 	let zapSound = SKAction.playSoundFileNamed("Zap.caf", waitForCompletion: false)
 	
+	// set bitmask categories for our assets
 	let HaloCategory:UInt32 = 0x1 << 0;
 	let BallCategory:UInt32 = 0x1 << 1;
 	let EdgeCategory:UInt32 = 0x1 << 2;
 	let ShieldCategory:UInt32 = 0x1 << 3;
 	let LifeBarCategory:UInt32 = 0x1 << 4;
 	
+	// helper variable to be set when we shoot.
+	// actual shot fires at end of frame to avoid
+	// player perception of lagging behind cannon aim
 	var _didShoot = false
 	
     override func didMoveToView(view: SKView) {
@@ -321,7 +336,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			// collision between halo and wall
 			let haloNode = firstBody.node as Halo
 			haloNode.forceBounce()
-			
 			self.runAction(zapSound)
 		}
 		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == BallCategory {
@@ -490,11 +504,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 				}
 			}
 
-			
 			if (node.position.y + node.frame.size.height < 0) {
 				node.removeFromParent()
 			}
-			
 		}
 	}
    
