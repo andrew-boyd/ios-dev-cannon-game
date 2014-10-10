@@ -21,6 +21,9 @@ class Menu:SKNode {
 	let title = SKSpriteNode(imageNamed: "Title")
 	let scoreBoard = SKSpriteNode(imageNamed: "ScoreBoard")
 	let playButton = SKSpriteNode(imageNamed: "PlayButton")
+	
+	let musicOnButton = SKSpriteNode(imageNamed: "MusicOffButton")
+	let musicOffButton = SKSpriteNode(imageNamed: "MusicOnButton")
 
 	override init() {
 		super.init()
@@ -40,8 +43,17 @@ class Menu:SKNode {
 		self.addChild(scoreBoard)
 		
 		playButton.name = "Play"
-		playButton.position = CGPointMake(0, 0)
+		playButton.position = CGPointMake(-10, 0)
 		self.addChild(playButton)
+		
+		musicOffButton.position = CGPointMake(75, 0)
+		musicOffButton.name = "MusicToggle"
+		self.addChild(musicOffButton)
+		
+		musicOnButton.position = CGPointMake(75, 0)
+		musicOnButton.name = "MusicToggle"
+		musicOnButton.hidden = true
+		self.addChild(musicOnButton)
 	}
 
 	required init(coder aDecoder: NSCoder) {
@@ -95,6 +107,10 @@ class Menu:SKNode {
 				})
 			])
 		)
+		musicOnButton.alpha = 0
+		musicOffButton.alpha = 0
+		musicOnButton.runAction(animatePlayButton)
+		musicOffButton.runAction(animatePlayButton)
 	}
 	
 	func hideMenu() {
@@ -113,5 +129,18 @@ class Menu:SKNode {
 				})
 			])
 		)
+	}
+	
+	func toggleMusic() {
+		if musicOnButton.hidden {
+			// mute music
+			_audioPlayer.volume = 0
+			musicOnButton.hidden = false
+			musicOffButton.hidden = true
+		} else {
+			_audioPlayer.volume = 0.1
+			musicOnButton.hidden = true
+			musicOffButton.hidden = false
+		}
 	}
 }

@@ -19,6 +19,9 @@ func randomInRange(low:CGFloat, high:CGFloat) -> CGFloat {
 	return CGFloat(randomAssNumber)
 }
 
+// music player
+let _audioPlayer = AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("ObservingTheStar", withExtension: "caf"), error: nil)
+
 // global variables we need to access across classes
 var _gameOver = true
 var _activeHaloCount:Int = 0
@@ -49,9 +52,6 @@ var _score:Int = 0 {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-	
-	// music player
-	let _audioPlayer = AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("easyMode", withExtension: "mp3"), error: nil)
 	
 	// game variables that can stay in our scene
 	let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -129,7 +129,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		// background music
 		_audioPlayer.numberOfLoops = -1
-		_audioPlayer.volume = 0.075
+		_audioPlayer.volume = 0.1
 		_audioPlayer.play()
 		
 		// Disable gravity
@@ -622,6 +622,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 				
 				if n.name == "Play" {
 					self.newGame()
+				} else if n.name == "MusicToggle" {
+					_menu.toggleMusic()
 				}
 			} else if !_gameOver {
 				if _gamePaused {

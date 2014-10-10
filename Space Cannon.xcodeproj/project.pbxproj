@@ -37,7 +37,9 @@
 		0179A41619E82D4500DC11B2 /* MultiShotPowerUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0179A41419E82D4500DC11B2 /* MultiShotPowerUp@2x.png */; };
 		01B1DEDB19E87620004665FD /* PauseButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B1DED919E87620004665FD /* PauseButton@2x.png */; };
 		01B1DEDC19E87620004665FD /* ResumeButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B1DEDA19E87620004665FD /* ResumeButton@2x.png */; };
-		01B1DEE119E8949D004665FD /* easyMode.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 01B1DEE019E8949D004665FD /* easyMode.mp3 */; };
+		01B1DEE319E89EDA004665FD /* ObservingTheStar.caf in Resources */ = {isa = PBXBuildFile; fileRef = 01B1DEE219E89EDA004665FD /* ObservingTheStar.caf */; };
+		01B1DEE619E89F9A004665FD /* MusicOffButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B1DEE419E89F9A004665FD /* MusicOffButton@2x.png */; };
+		01B1DEE719E89F9A004665FD /* MusicOnButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B1DEE519E89F9A004665FD /* MusicOnButton@2x.png */; };
 		01B9CEE119E30A82003673F6 /* LifeBarExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */; };
 		01B9CEE219E30A82003673F6 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE019E30A82003673F6 /* spark.png */; };
 		01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE319E30E69003673F6 /* EdgeHit.sks */; };
@@ -98,7 +100,9 @@
 		0179A41419E82D4500DC11B2 /* MultiShotPowerUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MultiShotPowerUp@2x.png"; path = "../MultiShotPowerUp@2x.png"; sourceTree = "<group>"; };
 		01B1DED919E87620004665FD /* PauseButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PauseButton@2x.png"; sourceTree = "<group>"; };
 		01B1DEDA19E87620004665FD /* ResumeButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ResumeButton@2x.png"; sourceTree = "<group>"; };
-		01B1DEE019E8949D004665FD /* easyMode.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = easyMode.mp3; sourceTree = "<group>"; };
+		01B1DEE219E89EDA004665FD /* ObservingTheStar.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ObservingTheStar.caf; sourceTree = "<group>"; };
+		01B1DEE419E89F9A004665FD /* MusicOffButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MusicOffButton@2x.png"; sourceTree = "<group>"; };
+		01B1DEE519E89F9A004665FD /* MusicOnButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MusicOnButton@2x.png"; sourceTree = "<group>"; };
 		01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LifeBarExplosion.sks; sourceTree = "<group>"; };
 		01B9CEE019E30A82003673F6 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		01B9CEE319E30E69003673F6 /* EdgeHit.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EdgeHit.sks; sourceTree = "<group>"; };
@@ -202,6 +206,8 @@
 		011D94A019D83D2E00E14A3F /* images */ = {
 			isa = PBXGroup;
 			children = (
+				01B1DEE419E89F9A004665FD /* MusicOffButton@2x.png */,
+				01B1DEE519E89F9A004665FD /* MusicOnButton@2x.png */,
 				01B1DED919E87620004665FD /* PauseButton@2x.png */,
 				01B1DEDA19E87620004665FD /* ResumeButton@2x.png */,
 				0179A41319E82D4500DC11B2 /* GreenCannon@2x.png */,
@@ -230,7 +236,7 @@
 		01B1DEDE19E88B8B004665FD /* Music */ = {
 			isa = PBXGroup;
 			children = (
-				01B1DEE019E8949D004665FD /* easyMode.mp3 */,
+				01B1DEE219E89EDA004665FD /* ObservingTheStar.caf */,
 			);
 			name = Music;
 			path = Sounds;
@@ -351,12 +357,13 @@
 				0179A41619E82D4500DC11B2 /* MultiShotPowerUp@2x.png in Resources */,
 				011D94B519D83D2E00E14A3F /* BlueBar@2x.png in Resources */,
 				01B1DEDC19E87620004665FD /* ResumeButton@2x.png in Resources */,
-				01B1DEE119E8949D004665FD /* easyMode.mp3 in Resources */,
+				01B1DEE619E89F9A004665FD /* MusicOffButton@2x.png in Resources */,
 				011D94B119D83D2E00E14A3F /* Ammo4@2x.png in Resources */,
 				01EC34DE19E44D450049E6D0 /* ScoreBoard@2x.png in Resources */,
 				01B9CEE219E30A82003673F6 /* spark.png in Resources */,
 				011D94B419D83D2E00E14A3F /* Block@2x.png in Resources */,
 				011D94AD19D83D2E00E14A3F /* Ammo0@2x.png in Resources */,
+				01B1DEE719E89F9A004665FD /* MusicOnButton@2x.png in Resources */,
 				011D94AE19D83D2E00E14A3F /* Ammo1@2x.png in Resources */,
 				01EC34D619E44A1F0049E6D0 /* DeepExplosion.caf in Resources */,
 				011D948819D83B3900E14A3F /* Images.xcassets in Resources */,
@@ -367,6 +374,7 @@
 				01EC34DF19E44D450049E6D0 /* Title@2x.png in Resources */,
 				011D948619D83B3900E14A3F /* Main.storyboard in Resources */,
 				011D94B819D83D2E00E14A3F /* Starfield@2x.png in Resources */,
+				01B1DEE319E89EDA004665FD /* ObservingTheStar.caf in Resources */,
 				011D94B019D83D2E00E14A3F /* Ammo3@2x.png in Resources */,
 				011D94B719D83D2E00E14A3F /* Halo@2x.png in Resources */,
 				011D94AF19D83D2E00E14A3F /* Ammo2@2x.png in Resources */,
