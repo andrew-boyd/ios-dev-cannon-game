@@ -33,6 +33,8 @@
 		0179A40E19E7018D00DC11B2 /* HaloX@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0179A40D19E7018D00DC11B2 /* HaloX@2x.png */; };
 		0179A41019E711CF00DC11B2 /* HaloBomb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0179A40F19E711CF00DC11B2 /* HaloBomb@2x.png */; };
 		0179A41219E8285E00DC11B2 /* ShieldUp.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0179A41119E8276E00DC11B2 /* ShieldUp.caf */; };
+		0179A41519E82D4500DC11B2 /* GreenCannon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0179A41319E82D4500DC11B2 /* GreenCannon@2x.png */; };
+		0179A41619E82D4500DC11B2 /* MultiShotPowerUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0179A41419E82D4500DC11B2 /* MultiShotPowerUp@2x.png */; };
 		01B9CEE119E30A82003673F6 /* LifeBarExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */; };
 		01B9CEE219E30A82003673F6 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE019E30A82003673F6 /* spark.png */; };
 		01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE319E30E69003673F6 /* EdgeHit.sks */; };
@@ -89,6 +91,8 @@
 		0179A40D19E7018D00DC11B2 /* HaloX@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HaloX@2x.png"; sourceTree = "<group>"; };
 		0179A40F19E711CF00DC11B2 /* HaloBomb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HaloBomb@2x.png"; sourceTree = "<group>"; };
 		0179A41119E8276E00DC11B2 /* ShieldUp.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ShieldUp.caf; sourceTree = "<group>"; };
+		0179A41319E82D4500DC11B2 /* GreenCannon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GreenCannon@2x.png"; path = "../GreenCannon@2x.png"; sourceTree = "<group>"; };
+		0179A41419E82D4500DC11B2 /* MultiShotPowerUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MultiShotPowerUp@2x.png"; path = "../MultiShotPowerUp@2x.png"; sourceTree = "<group>"; };
 		01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LifeBarExplosion.sks; sourceTree = "<group>"; };
 		01B9CEE019E30A82003673F6 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		01B9CEE319E30E69003673F6 /* EdgeHit.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EdgeHit.sks; sourceTree = "<group>"; };
@@ -191,6 +195,8 @@
 		011D94A019D83D2E00E14A3F /* images */ = {
 			isa = PBXGroup;
 			children = (
+				0179A41319E82D4500DC11B2 /* GreenCannon@2x.png */,
+				0179A41419E82D4500DC11B2 /* MultiShotPowerUp@2x.png */,
 				01EC34DA19E44D450049E6D0 /* PlayButton@2x.png */,
 				01EC34DB19E44D450049E6D0 /* ScoreBoard@2x.png */,
 				01EC34DC19E44D450049E6D0 /* Title@2x.png */,
@@ -324,6 +330,7 @@
 				011D94B319D83D2E00E14A3F /* Ball@2x.png in Resources */,
 				01EC34DD19E44D450049E6D0 /* PlayButton@2x.png in Resources */,
 				011D948B19D83B3900E14A3F /* LaunchScreen.xib in Resources */,
+				0179A41619E82D4500DC11B2 /* MultiShotPowerUp@2x.png in Resources */,
 				011D94B519D83D2E00E14A3F /* BlueBar@2x.png in Resources */,
 				011D94B119D83D2E00E14A3F /* Ammo4@2x.png in Resources */,
 				01EC34DE19E44D450049E6D0 /* ScoreBoard@2x.png in Resources */,
@@ -348,6 +355,7 @@
 				01CD8CB019E6D506002381D4 /* BallTrail.sks in Resources */,
 				011D94B619D83D2E00E14A3F /* Cannon@2x.png in Resources */,
 				01EC34D719E44A1F0049E6D0 /* Explosion.caf in Resources */,
+				0179A41519E82D4500DC11B2 /* GreenCannon@2x.png in Resources */,
 				01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

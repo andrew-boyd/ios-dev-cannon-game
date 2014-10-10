@@ -21,6 +21,7 @@ func randomInRange(low:CGFloat, high:CGFloat) -> CGFloat {
 // global variables we need to access across classes
 var _gameOver = true
 var _activeHaloCount:Int = 0
+var _multishotMode = false
 var _activeBomb:Bool = false
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -52,8 +53,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		}
 	}
 	
+	var ammo:Int = 5 {
+		didSet {
+			if self.ammo < 0 {
+				self.ammo = 0
+			}
+			if self.ammo >= 0 && self.ammo <= 5 {
+				let ammoTextureName = "Ammo" + String(self.ammo)
+				_ammoDisplay.texture = SKTexture(imageNamed: ammoTextureName)
+			}
+		}
+	}
+	
+	// mutishot powerup variables
+	var _killCount:Int = 0 {
+		didSet {
+			if _killCount >= _multishotTargetKillCount {
+				_multishotTargetKillCount += 2
+				spawnMultishotPowerUp()
+			}
+		}
+	}
+	var _multishotTargetKillCount:Int = 2
+	
 	// canonball settings
-	var ammo = 5
 	let SHOOT_SPEED = 1000.0
 	
 	// halo generation settings
@@ -73,12 +96,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	let shieldUpSound = SKAction.playSoundFileNamed("ShieldUp.caf", waitForCompletion: false)
 	
 	// set bitmask categories for our assets
-	let HaloCategory:UInt32     = 0x1 << 0;
-	let BallCategory:UInt32     = 0x1 << 1;
-	let EdgeCategory:UInt32     = 0x1 << 2;
-	let ShieldCategory:UInt32   = 0x1 << 3;
-	let LifeBarCategory:UInt32  = 0x1 << 4;
-	let ShieldUpCategory:UInt32 = 0x1 << 5;
+	let HaloCategory:UInt32      = 0x1 << 0;
+	let BallCategory:UInt32      = 0x1 << 1;
+	let EdgeCategory:UInt32      = 0x1 << 2;
+	let ShieldCategory:UInt32    = 0x1 << 3;
+	let LifeBarCategory:UInt32   = 0x1 << 4;
+	let ShieldUpCategory:UInt32  = 0x1 << 5;
+	let MultishotCategory:UInt32 = 0x1 << 6;
 	
 	// helper variable to be set when we shoot.
 	// actual shot fires at end of frame to avoid
@@ -165,14 +189,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			])
 		self.runAction(SKAction.repeatActionForever(spawnShieldUpAction))
 
-		
 		// refill Ammo
 		let incrementAmmo = SKAction.sequence([
 				SKAction.waitForDuration(1),
 				SKAction.runBlock({ () -> Void in
-					if self.ammo < 5 {
+					if self.ammo < 5 && !_multishotMode {
 						self.ammo++
-						self.updateAmmo()
 					}
 				}),
 			])
@@ -200,7 +222,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		// set initial values
 		var ammo = 5
-		updateAmmo()
 		_score = 0
 		pointValue = 1
 		_menu.setScore(0)
@@ -219,9 +240,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		_scoreLabel.hidden = false
 		_pointLabel.hidden = false
 		var ammo = 5
-		updateAmmo()
 		_score = 0
 		pointValue = 1
+		disableMultishotMode()
+		_killCount = 0
 		
 		// add shields to game
 		while _shieldPool.count > 0 {
@@ -239,49 +261,56 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
 	
 	func shoot() {
-		if self.ammo > 0 {
-			self.ammo -= 1
-			updateAmmo()
-			
-			self.runAction(laserSound)
-			
-			let ball = Ball(imageNamed: "Ball")
-			ball.name = "ball"
-			let rotationVector = radiansToVector(_cannon.zRotation)
-			
-			ball.position = CGPointMake(_cannon.position.x + (_cannon.size.width/2.5 * rotationVector.dx),
-										_cannon.position.y + (_cannon.size.width/2.5 * rotationVector.dy))
-			ball.physicsBody = SKPhysicsBody(circleOfRadius: 6.0)
-			
-			let x_speed = CGFloat(Double(rotationVector.dx) * SHOOT_SPEED)
-			let y_speed = CGFloat(Double(rotationVector.dy) * SHOOT_SPEED)
-			ball.physicsBody?.velocity = CGVectorMake(x_speed, y_speed)
-			ball.size.width = self.size.width/12
-			ball.size.height = self.size.width/12
-			ball.physicsBody?.restitution = 1.0
-			ball.physicsBody?.linearDamping = 0.0
-			ball.physicsBody?.friction = 0.0
-			ball.physicsBody?.usesPreciseCollisionDetection = true
-			ball.physicsBody?.categoryBitMask = BallCategory
-			ball.physicsBody?.collisionBitMask = EdgeCategory
-			ball.physicsBody?.contactTestBitMask = EdgeCategory | ShieldUpCategory
-			
-			// create trail for ball
-			let ballTrailPath = NSBundle.mainBundle().pathForResource("BallTrail", ofType: "sks")!
-			let ballTrail = NSKeyedUnarchiver.unarchiveObjectWithFile(ballTrailPath) as SKEmitterNode
-			ballTrail.targetNode = _mainLayer
-			ball.trail = ballTrail
-			_mainLayer.addChild(ballTrail)
-			
-			_mainLayer.addChild(ball)
+		if _multishotMode && self.ammo > 0 {
+			let multishotAction = SKAction.sequence([
+				SKAction.waitForDuration(0.15),
+				SKAction.runBlock(fireShot)
+				])
+			self.runAction(SKAction.repeatAction(multishotAction, count: 5))
+		} else if self.ammo > 0 {
+			fireShot()
 		}
+		
+		self.ammo -= 1
+		
+		if ammo == 0 && _multishotMode {
+			disableMultishotMode()
+		}
+		
 	}
 	
-	func updateAmmo() {
-		if self.ammo >= 0 && self.ammo <= 5 {
-			let ammoTextureName = "Ammo" + String(self.ammo)
-			_ammoDisplay.texture = SKTexture(imageNamed: ammoTextureName)
-		}
+	func fireShot() {
+		self.runAction(laserSound)
+		
+		let ball = Ball(imageNamed: "Ball")
+		ball.name = "ball"
+		let rotationVector = radiansToVector(_cannon.zRotation)
+		
+		ball.position = CGPointMake(_cannon.position.x + (_cannon.size.width/2.5 * rotationVector.dx),
+			_cannon.position.y + (_cannon.size.width/2.5 * rotationVector.dy))
+		ball.physicsBody = SKPhysicsBody(circleOfRadius: 6.0)
+		
+		let x_speed = CGFloat(Double(rotationVector.dx) * SHOOT_SPEED)
+		let y_speed = CGFloat(Double(rotationVector.dy) * SHOOT_SPEED)
+		ball.physicsBody?.velocity = CGVectorMake(x_speed, y_speed)
+		ball.size.width = self.size.width/12
+		ball.size.height = self.size.width/12
+		ball.physicsBody?.restitution = 1.0
+		ball.physicsBody?.linearDamping = 0.0
+		ball.physicsBody?.friction = 0.0
+		ball.physicsBody?.usesPreciseCollisionDetection = true
+		ball.physicsBody?.categoryBitMask = BallCategory
+		ball.physicsBody?.collisionBitMask = EdgeCategory
+		ball.physicsBody?.contactTestBitMask = EdgeCategory | ShieldUpCategory | MultishotCategory
+		
+		// create trail for ball
+		let ballTrailPath = NSBundle.mainBundle().pathForResource("BallTrail", ofType: "sks")!
+		let ballTrail = NSKeyedUnarchiver.unarchiveObjectWithFile(ballTrailPath) as SKEmitterNode
+		ballTrail.targetNode = _mainLayer
+		ball.trail = ballTrail
+		_mainLayer.addChild(ballTrail)
+		
+		_mainLayer.addChild(ball)
 	}
 	
 	func spawnHalo() {
@@ -328,6 +357,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			_mainLayer.addChild(shieldUp)
 		}
 	}
+
+	func spawnMultishotPowerUp() {
+		var multishot = SKSpriteNode(imageNamed: "MultiShotPowerUp")
+		multishot.name = "shieldUp"
+		multishot.size.width = self.size.width/8
+		multishot.size.height = self.size.width/8
+		multishot.position = CGPointMake(-multishot.size.width, randomInRange(150, self.size.height - 100))
+		multishot.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: multishot.size.width*0.75, height: multishot.size.height*0.75))
+		multishot.physicsBody?.categoryBitMask = MultishotCategory
+		multishot.physicsBody?.collisionBitMask = 0
+		multishot.physicsBody?.velocity = CGVectorMake(90, randomInRange(-40, 40))
+		multishot.physicsBody?.angularVelocity = CGFloat(M_PI)
+		multishot.physicsBody?.linearDamping = 0
+		multishot.physicsBody?.angularDamping = 0
+		_mainLayer.addChild(multishot)
+	}
+	
+	func enableMultishotMode() {
+		_multishotMode = true
+		ammo = 5
+		_cannon.texture = SKTexture(imageNamed: "GreenCannon")
+	}
+	
+	func disableMultishotMode() {
+		_multishotMode = false
+		ammo = 5
+		_cannon.texture = SKTexture(imageNamed: "Cannon")
+	}
 	
 	func didBeginContact(contact: SKPhysicsContact) {
 		var firstBody:SKPhysicsBody
@@ -341,106 +398,119 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			secondBody = contact.bodyA
 		}
 		
-		if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == EdgeCategory {
-			// collision between ball and wall
-			self.addExplosion(contact.contactPoint, name: "EdgeHit")
-			
-			let ballNode = firstBody.node as Ball
-			ballNode.bounces++
-			if ballNode.bounces > 3 {
-				ballNode.removeFromParent()
-				self.pointValue = 1
-			}
-			
-			self.runAction(bounceSound)
-		}
-		if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ShieldUpCategory {
-			// collision between ball and shield powerup
-			if (_shieldPool.count > 0) {
-				while _shieldPool.count > 0 {
-					_mainLayer.addChild(_shieldPool[0])
-					_shieldPool.removeAtIndex(0)
+		if firstBody.node? != nil && secondBody.node? != nil {
+		
+			if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == EdgeCategory {
+				// collision between ball and wall
+				self.addExplosion(contact.contactPoint, name: "EdgeHit")
+				
+				let ballNode = firstBody.node as Ball
+				
+				ballNode.bounces++
+				if ballNode.bounces > 3 {
+					ballNode.removeFromParent()
+					self.pointValue = 1
 				}
+				
+				self.runAction(bounceSound)
 			}
-			
-			self.runAction(shieldUpSound)
-			secondBody.node?.removeFromParent()
-		}
-		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == EdgeCategory {
-			// collision between halo and wall
-			let haloNode = firstBody.node as Halo
-			haloNode.forceBounce()
-			self.runAction(zapSound)
-		}
-		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == BallCategory {
-			// collision between halo and ball
-			self._score += self.pointValue
-			
-			let haloNode = firstBody.node as Halo
-			
-			if haloNode.userData?.valueForKey("Multiplier") != nil {
-				if haloNode.userData?.valueForKey("Multiplier") as Bool {
-					self.pointValue++
-				}
-			} else if haloNode.userData?.valueForKey("isBomb") != nil {
-				if haloNode.userData?.valueForKey("isBomb") as Bool {
-					_mainLayer.enumerateChildNodesWithName("halo") {
-						node, stop in
-						
-						// give points for all on screen halos
-						self._score += self.pointValue
-						
-						self.addExplosion(node.position, name: "HaloExplosion")
-						node.removeFromParent()
-					}
-					
-					// compensate for adding score twice
-					self._score -= self.pointValue
-				}
-			}
-			
-			self.addExplosion(firstBody.node!.position, name: "HaloExplosion")
-			self.runAction(explosionSound)
-			firstBody.node?.removeFromParent()
-			secondBody.node?.removeFromParent()
-		}
-		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == ShieldCategory {
-			// collision between halo and shield
-			self.addExplosion(contact.contactPoint, name: "HaloExplosion")
-			self.runAction(explosionSound)
-			
-			// check if hit by bomb and remove all shields
-			let haloNode = firstBody.node as Halo
-			if haloNode.userData?.valueForKey("isBomb") != nil {
-				if haloNode.userData?.valueForKey("isBomb") as Bool {
-					_mainLayer.enumerateChildNodesWithName("shield") { node, stop in
-						self.addExplosion(node.position, name: "HaloExplosion")
-						
-						// add removed shields back to shield pool
-						self._shieldPool.append(node)
-						node.removeFromParent()
+			if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ShieldUpCategory {
+				// collision between ball and shield powerup
+				if (_shieldPool.count > 0) {
+					while _shieldPool.count > 0 {
+						_mainLayer.addChild(_shieldPool[0])
+						_shieldPool.removeAtIndex(0)
 					}
 				}
-			} else {
-				// add removed shield back to shield pool
-				if (secondBody.node? != nil) {
+				
+				self.runAction(shieldUpSound)
+				secondBody.node?.removeFromParent()
+			}
+			if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == MultishotCategory {
+				// collision between ball and multishot powerup
+				self.runAction(shieldUpSound)
+				enableMultishotMode()
+				secondBody.node?.removeFromParent()
+			}
+			if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == EdgeCategory {
+				// collision between halo and wall
+				let haloNode = firstBody.node as Halo
+				haloNode.forceBounce()
+				self.runAction(zapSound)
+			}
+			if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == BallCategory {
+				// collision between halo and ball
+				self._score += self.pointValue
+				_killCount += 1
+				
+				let haloNode = firstBody.node as Halo
+				
+				if haloNode.userData?.valueForKey("Multiplier") != nil {
+					if haloNode.userData?.valueForKey("Multiplier") as Bool {
+						self.pointValue++
+					}
+				} else if haloNode.userData?.valueForKey("isBomb") != nil {
+					if haloNode.userData?.valueForKey("isBomb") as Bool {
+						_mainLayer.enumerateChildNodesWithName("halo") {
+							node, stop in
+							
+							// give points for all on screen halos
+							self._score += self.pointValue
+							self._killCount += 1
+							
+							self.addExplosion(node.position, name: "HaloExplosion")
+							node.removeFromParent()
+						}
+						
+						// compensate for adding score and kill twice
+						_killCount -= 1
+						self._score -= self.pointValue
+					}
+				}
+				
+				// only allow 1 collision
+				firstBody.categoryBitMask = 0
+				
+				self.addExplosion(firstBody.node!.position, name: "HaloExplosion")
+				self.runAction(explosionSound)
+				firstBody.node?.removeFromParent()
+				secondBody.node?.removeFromParent()
+			}
+			if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == ShieldCategory {
+				// collision between halo and shield
+				self.addExplosion(contact.contactPoint, name: "HaloExplosion")
+				self.runAction(explosionSound)
+				
+				// check if hit by bomb and remove all shields
+				let haloNode = firstBody.node as Halo
+				if haloNode.userData?.valueForKey("isBomb") != nil {
+					if haloNode.userData?.valueForKey("isBomb") as Bool {
+						_mainLayer.enumerateChildNodesWithName("shield") { node, stop in
+							self.addExplosion(node.position, name: "HaloExplosion")
+							
+							// add removed shields back to shield pool
+							self._shieldPool.append(node)
+							node.removeFromParent()
+						}
+					}
+				} else {
 					_shieldPool.append(secondBody.node!)
 				}
+				
+				// only destroy one shield
+				firstBody.categoryBitMask = 0
+				
+				firstBody.node?.removeFromParent()
+				secondBody.node?.removeFromParent()
 			}
-			
-			// only destroy one shield
-			firstBody.categoryBitMask = 0
-			
-			firstBody.node?.removeFromParent()
-			secondBody.node?.removeFromParent()
-		}
-		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == LifeBarCategory {
-			// collision between halo and lifeBar
-			self.addExplosion(secondBody.node!.position, name: "LifeBarExplosion")
-			self.runAction(deepExplosionSound)
-			secondBody.node?.removeFromParent()
-			
-			gameOver()
+			if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == LifeBarCategory {
+				// collision between halo and lifeBar
+				self.addExplosion(secondBody.node!.position, name: "LifeBarExplosion")
+				self.runAction(deepExplosionSound)
+				secondBody.node?.removeFromParent()
+				
+				gameOver()
+			}
 		}
 	}
 	
