@@ -37,6 +37,7 @@
 		0179A41619E82D4500DC11B2 /* MultiShotPowerUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0179A41419E82D4500DC11B2 /* MultiShotPowerUp@2x.png */; };
 		01B1DEDB19E87620004665FD /* PauseButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B1DED919E87620004665FD /* PauseButton@2x.png */; };
 		01B1DEDC19E87620004665FD /* ResumeButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B1DEDA19E87620004665FD /* ResumeButton@2x.png */; };
+		01B1DEE119E8949D004665FD /* easyMode.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 01B1DEE019E8949D004665FD /* easyMode.mp3 */; };
 		01B9CEE119E30A82003673F6 /* LifeBarExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */; };
 		01B9CEE219E30A82003673F6 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE019E30A82003673F6 /* spark.png */; };
 		01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE319E30E69003673F6 /* EdgeHit.sks */; };
@@ -97,6 +98,7 @@
 		0179A41419E82D4500DC11B2 /* MultiShotPowerUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MultiShotPowerUp@2x.png"; path = "../MultiShotPowerUp@2x.png"; sourceTree = "<group>"; };
 		01B1DED919E87620004665FD /* PauseButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PauseButton@2x.png"; sourceTree = "<group>"; };
 		01B1DEDA19E87620004665FD /* ResumeButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ResumeButton@2x.png"; sourceTree = "<group>"; };
+		01B1DEE019E8949D004665FD /* easyMode.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = easyMode.mp3; sourceTree = "<group>"; };
 		01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LifeBarExplosion.sks; sourceTree = "<group>"; };
 		01B9CEE019E30A82003673F6 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		01B9CEE319E30E69003673F6 /* EdgeHit.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EdgeHit.sks; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				01EC34E219E44E490049E6D0 /* Classes */,
 				011D94A019D83D2E00E14A3F /* images */,
 				01EC34CF19E44A1F0049E6D0 /* sounds */,
+				01B1DEDE19E88B8B004665FD /* Music */,
 				011D947A19D83B3900E14A3F /* Supporting Files */,
 			);
 			path = "Space Cannon";
@@ -222,6 +225,15 @@
 				011D94AC19D83D2E00E14A3F /* Starfield@2x.png */,
 			);
 			path = images;
+			sourceTree = "<group>";
+		};
+		01B1DEDE19E88B8B004665FD /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				01B1DEE019E8949D004665FD /* easyMode.mp3 */,
+			);
+			name = Music;
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 		01EC34CF19E44A1F0049E6D0 /* sounds */ = {
@@ -339,6 +351,7 @@
 				0179A41619E82D4500DC11B2 /* MultiShotPowerUp@2x.png in Resources */,
 				011D94B519D83D2E00E14A3F /* BlueBar@2x.png in Resources */,
 				01B1DEDC19E87620004665FD /* ResumeButton@2x.png in Resources */,
+				01B1DEE119E8949D004665FD /* easyMode.mp3 in Resources */,
 				011D94B119D83D2E00E14A3F /* Ammo4@2x.png in Resources */,
 				01EC34DE19E44D450049E6D0 /* ScoreBoard@2x.png in Resources */,
 				01B9CEE219E30A82003673F6 /* spark.png in Resources */,

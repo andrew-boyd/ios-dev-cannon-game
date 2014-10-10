@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import AVFoundation
 
 // global helper functions
 func radiansToVector(radians:CGFloat) -> CGVector {
@@ -49,7 +50,8 @@ var _score:Int = 0 {
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
 	
-	
+	// music player
+	let _audioPlayer = AVAudioPlayer(contentsOfURL: NSBundle.mainBundle().URLForResource("easyMode", withExtension: "mp3"), error: nil)
 	
 	// game variables that can stay in our scene
 	let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -124,6 +126,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	var _didShoot = false
 	
     override func didMoveToView(view: SKView) {
+		
+		// background music
+		_audioPlayer.numberOfLoops = -1
+		_audioPlayer.volume = 0.075
+		_audioPlayer.play()
 		
 		// Disable gravity
 		self.physicsWorld.gravity = CGVectorMake(0.0, 0.0)
