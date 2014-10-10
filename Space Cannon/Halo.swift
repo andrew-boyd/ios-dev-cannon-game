@@ -12,12 +12,14 @@ class Halo:SKSpriteNode {
 	override init() {
 		super.init()
 		
-		if ( _activeHaloCount >= 4 && !_activeBomb ) {
+		var haloCountRequirement = 4 + (_score/50)
+		
+		if ( _activeHaloCount >= haloCountRequirement && !_activeBomb ) {
 			_activeBomb = true
 			self.texture = SKTexture(imageNamed: "HaloBomb")
 			self.userData = NSMutableDictionary()
 			self.userData?.setObject(true, forKey: "isBomb")
-		} else if (!_gameOver && arc4random_uniform(6) == 0) {
+		} else if (!_gameOver && arc4random_uniform(8) == 0) {
 			self.texture = SKTexture(imageNamed: "HaloX")
 			self.userData = NSMutableDictionary()
 			self.userData?.setObject(true, forKey: "Multiplier")
