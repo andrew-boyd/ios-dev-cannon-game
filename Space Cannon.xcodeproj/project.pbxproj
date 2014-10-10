@@ -32,6 +32,7 @@
 		0179A40C19E6ED2200DC11B2 /* Halo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0179A40B19E6ED2200DC11B2 /* Halo.swift */; };
 		0179A40E19E7018D00DC11B2 /* HaloX@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0179A40D19E7018D00DC11B2 /* HaloX@2x.png */; };
 		0179A41019E711CF00DC11B2 /* HaloBomb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0179A40F19E711CF00DC11B2 /* HaloBomb@2x.png */; };
+		0179A41219E8285E00DC11B2 /* ShieldUp.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0179A41119E8276E00DC11B2 /* ShieldUp.caf */; };
 		01B9CEE119E30A82003673F6 /* LifeBarExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */; };
 		01B9CEE219E30A82003673F6 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE019E30A82003673F6 /* spark.png */; };
 		01B9CEE419E30E69003673F6 /* EdgeHit.sks in Resources */ = {isa = PBXBuildFile; fileRef = 01B9CEE319E30E69003673F6 /* EdgeHit.sks */; };
@@ -87,6 +88,7 @@
 		0179A40B19E6ED2200DC11B2 /* Halo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Halo.swift; sourceTree = "<group>"; };
 		0179A40D19E7018D00DC11B2 /* HaloX@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HaloX@2x.png"; sourceTree = "<group>"; };
 		0179A40F19E711CF00DC11B2 /* HaloBomb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HaloBomb@2x.png"; sourceTree = "<group>"; };
+		0179A41119E8276E00DC11B2 /* ShieldUp.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ShieldUp.caf; sourceTree = "<group>"; };
 		01B9CEDF19E30A82003673F6 /* LifeBarExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LifeBarExplosion.sks; sourceTree = "<group>"; };
 		01B9CEE019E30A82003673F6 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		01B9CEE319E30E69003673F6 /* EdgeHit.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EdgeHit.sks; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 		01EC34CF19E44A1F0049E6D0 /* sounds */ = {
 			isa = PBXGroup;
 			children = (
+				0179A41119E8276E00DC11B2 /* ShieldUp.caf */,
 				01EC34D019E44A1F0049E6D0 /* Bounce.caf */,
 				01EC34D119E44A1F0049E6D0 /* DeepExplosion.caf */,
 				01EC34D219E44A1F0049E6D0 /* Explosion.caf */,
@@ -316,6 +319,7 @@
 			files = (
 				01EC34D819E44A1F0049E6D0 /* Laser.caf in Resources */,
 				011D94B219D83D2E00E14A3F /* Ammo5@2x.png in Resources */,
+				0179A41219E8285E00DC11B2 /* ShieldUp.caf in Resources */,
 				01B9CEE119E30A82003673F6 /* LifeBarExplosion.sks in Resources */,
 				011D94B319D83D2E00E14A3F /* Ball@2x.png in Resources */,
 				01EC34DD19E44D450049E6D0 /* PlayButton@2x.png in Resources */,

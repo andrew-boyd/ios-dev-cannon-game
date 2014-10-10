@@ -70,13 +70,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	let deepExplosionSound = SKAction.playSoundFileNamed("DeepExplosion.caf", waitForCompletion: false)
 	let laserSound = SKAction.playSoundFileNamed("Laser.caf", waitForCompletion: false)
 	let zapSound = SKAction.playSoundFileNamed("Zap.caf", waitForCompletion: false)
+	let shieldUpSound = SKAction.playSoundFileNamed("ShieldUp.caf", waitForCompletion: false)
 	
 	// set bitmask categories for our assets
-	let HaloCategory:UInt32 = 0x1 << 0;
-	let BallCategory:UInt32 = 0x1 << 1;
-	let EdgeCategory:UInt32 = 0x1 << 2;
-	let ShieldCategory:UInt32 = 0x1 << 3;
-	let LifeBarCategory:UInt32 = 0x1 << 4;
+	let HaloCategory:UInt32     = 0x1 << 0;
+	let BallCategory:UInt32     = 0x1 << 1;
+	let EdgeCategory:UInt32     = 0x1 << 2;
+	let ShieldCategory:UInt32   = 0x1 << 3;
+	let LifeBarCategory:UInt32  = 0x1 << 4;
+	let ShieldUpCategory:UInt32 = 0x1 << 5;
 	
 	// helper variable to be set when we shoot.
 	// actual shot fires at end of frame to avoid
@@ -99,13 +101,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		// Add Edges
 		let leftEdge = SKNode()
-		leftEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height + 100))
+		leftEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height * 2))
 		leftEdge.position = CGPointMake(5.0, 0.0)
 		leftEdge.zPosition = 3
 		leftEdge.physicsBody?.categoryBitMask = EdgeCategory
 		
 		let rightEdge = SKNode()
-		rightEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height + 100))
+		rightEdge.physicsBody = SKPhysicsBody(edgeFromPoint: CGPointZero, toPoint: CGPointMake(0.0, self.size.height * 2))
 		rightEdge.position = CGPointMake(self.size.width - 5.0, 0.0)
 		rightEdge.zPosition = 3
 		rightEdge.physicsBody?.categoryBitMask = EdgeCategory
@@ -151,11 +153,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		
 		// create spawn halo actions
 		let spawnHaloAction = SKAction.sequence([
-				SKAction.waitForDuration(2.0),
+				SKAction.waitForDuration(2.0, withRange: 1.0),
 				SKAction.runBlock(spawnHalo)
 			])
-		
 		self.runAction(SKAction.repeatActionForever(spawnHaloAction), withKey: "spawnHalo")
+		
+		// create spawn shield powerup
+		let spawnShieldUpAction = SKAction.sequence([
+				SKAction.waitForDuration(25.0, withRange: 5.0),
+				SKAction.runBlock(spawnShieldPowerUp)
+			])
+		self.runAction(SKAction.repeatActionForever(spawnShieldUpAction))
+
 		
 		// refill Ammo
 		let incrementAmmo = SKAction.sequence([
@@ -255,7 +264,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			ball.physicsBody?.usesPreciseCollisionDetection = true
 			ball.physicsBody?.categoryBitMask = BallCategory
 			ball.physicsBody?.collisionBitMask = EdgeCategory
-			ball.physicsBody?.contactTestBitMask = EdgeCategory
+			ball.physicsBody?.contactTestBitMask = EdgeCategory | ShieldUpCategory
 			
 			// create trail for ball
 			let ballTrailPath = NSBundle.mainBundle().pathForResource("BallTrail", ofType: "sks")!
@@ -285,8 +294,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		let halo = Halo()
 		halo.name = "halo"
 		halo.position = CGPointMake(
-			randomInRange(halo.size.width/2, self.size.width - (halo.size.width/2)),
-			self.size.height + (halo.size.width/2)
+			randomInRange(halo.size.width + 10, self.size.width - (halo.size.width + 10)),
+			self.size.height + 100
 		)
 		halo.physicsBody = SKPhysicsBody(circleOfRadius: 16)
 		var direction = radiansToVector(randomInRange(HaloLowAngle, HaloMaxAngle))
@@ -304,7 +313,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 	}
 	
 	func spawnShieldPowerUp() {
-		
+		if _shieldPool.count > 0 {
+			var shieldUp = SKSpriteNode(imageNamed: "Block")
+			shieldUp.name = "shieldUp"
+			shieldUp.size.width = self.size.width/6
+			shieldUp.position = CGPointMake(self.size.width + shieldUp.size.width, randomInRange(150, self.size.height - 100))
+			shieldUp.physicsBody = SKPhysicsBody(rectangleOfSize: CGSize(width: shieldUp.size.width*0.75, height: shieldUp.size.height*0.75))
+			shieldUp.physicsBody?.categoryBitMask = ShieldUpCategory
+			shieldUp.physicsBody?.collisionBitMask = 0
+			shieldUp.physicsBody?.velocity = CGVectorMake(-60, randomInRange(-40, 40))
+			shieldUp.physicsBody?.angularVelocity = CGFloat(M_PI)
+			shieldUp.physicsBody?.linearDamping = 0
+			shieldUp.physicsBody?.angularDamping = 0
+			_mainLayer.addChild(shieldUp)
+		}
 	}
 	
 	func didBeginContact(contact: SKPhysicsContact) {
@@ -331,6 +353,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 			}
 			
 			self.runAction(bounceSound)
+		}
+		if firstBody.categoryBitMask == BallCategory && secondBody.categoryBitMask == ShieldUpCategory {
+			// collision between ball and shield powerup
+			if (_shieldPool.count > 0) {
+				while _shieldPool.count > 0 {
+					_mainLayer.addChild(_shieldPool[0])
+					_shieldPool.removeAtIndex(0)
+				}
+			}
+			
+			self.runAction(shieldUpSound)
+			secondBody.node?.removeFromParent()
 		}
 		if firstBody.categoryBitMask == HaloCategory && secondBody.categoryBitMask == EdgeCategory {
 			// collision between halo and wall
@@ -381,16 +415,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 				if haloNode.userData?.valueForKey("isBomb") as Bool {
 					_mainLayer.enumerateChildNodesWithName("shield") { node, stop in
 						self.addExplosion(node.position, name: "HaloExplosion")
+						
+						// add removed shields back to shield pool
+						self._shieldPool.append(node)
 						node.removeFromParent()
 					}
+				}
+			} else {
+				// add removed shield back to shield pool
+				if (secondBody.node? != nil) {
+					_shieldPool.append(secondBody.node!)
 				}
 			}
 			
 			// only destroy one shield
 			firstBody.categoryBitMask = 0
-			
-			// add removed shield back to shield pool
-			_shieldPool.append(secondBody.node!)
 			
 			firstBody.node?.removeFromParent()
 			secondBody.node?.removeFromParent()
@@ -428,6 +467,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 		}
 		_mainLayer.enumerateChildNodesWithName("shield") { node, stop in
 			self._shieldPool.append(node)
+			node.removeFromParent()
+		}
+		_mainLayer.enumerateChildNodesWithName("shieldUp") { node, stop in
 			node.removeFromParent()
 		}
 		
@@ -508,6 +550,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 				node.removeFromParent()
 			}
 		}
+		
+		_mainLayer.enumerateChildNodesWithName("shieldUp") {
+			node, stop in
+			
+			if node.position.x + node.frame.size.width < 0 {
+				node.removeFromParent()
+			}
+		}
+
 	}
    
     override func update(currentTime: CFTimeInterval) {
